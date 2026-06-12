@@ -192,7 +192,7 @@ export function tripScreen(root, s, { onEnd }) {
         kicker: 'GARE DE CANNES', title: 'The Last Train Left at 00:50',
         body: '<p>The departures board is a wall of red CANCELLED and one mocking SERVICE TERMINÉ. Antibes might as well be Marseille. A lone taxi idles outside, its driver already doing the maths on your desperation.</p>',
         options: [
-          { label: 'Pay the €120 taxi', sub: 'sleep is an investment' },
+          { label: 'Pay the €160 taxi', sub: 'sleep is an investment' },
           { label: 'Sleep on the beach', sub: 'free. spiritually expensive' },
         ],
       });

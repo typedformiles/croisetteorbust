@@ -39,8 +39,8 @@ corporate satire (everyone knows the Cannes budget decision is arbitrary).
 Weighting: skew low-middle. The $2.5M result should feel like a jackpot
 (lights, confetti).
 
-**2. ARRIVAL** — Sat / Sun / Mon / Tue
-**3. DEPARTURE** — Wed / Thu / Fri / Sat
+**2. ARRIVAL** — Sun / Mon
+**3. DEPARTURE** — Tue / Wed / Thu / Fri
 (Festival days are Mon–Fri. Arrival day is half-usable; departure day ends at noon.)
 
 **4. DIGS** (accommodation is pre-booked by the company — not paid from budget)
@@ -104,8 +104,9 @@ no shared hand. Replay is the hook; the share card carries the bragging.
 | **La Croisette (stroll)** | free, low yield, high serendipity encounter rate |
 
 ### Random encounters
-Rolled on arrival at a venue and at certain hours; table weighted by venue,
-hour, sleep debt, and joie. Industry-twisted Dope Wars flavour. Starter list:
+Rolled on arrival at a venue and after actions; table weighted by venue,
+hour and sleep debt. Every encounter fires at most ONCE per game, and every
+encounter is tied to venues where its text makes sense. Industry-twisted Dope Wars flavour. Starter list:
 
 - A creative director offers you an unmarked bag of slightly off-white powder.
   (Options keep it winking, not indulgent — "ask if it's oat milk creamer.")

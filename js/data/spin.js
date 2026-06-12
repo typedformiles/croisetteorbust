@@ -1,25 +1,25 @@
 // The five reels of fate. Weights skew low-middle so the jackpot feels like one.
 
 export const BUDGET_REEL = [
-  { value: 5_000, par: 200,    label: '$5k',    weight: 16,
+  { value: 5_000, par: 145,    label: '$5k',    weight: 16,
     flavour: 'Travel freeze. And yes, that includes your flights.',
     flight: { cost: 480, label: 'a 6am budget flight from Luton, middle seat' } },
-  { value: 15_000, par: 110,   label: '$15k',   weight: 22,
+  { value: 15_000, par: 60,   label: '$15k',   weight: 22,
     flavour: 'Marketing found some Q2 underspend down the back of the sofa.',
     flight: { cost: 1_100, label: 'economy, but you got an aisle' } },
-  { value: 40_000, par: 70,   label: '$40k',   weight: 20,
+  { value: 40_000, par: 39,   label: '$40k',   weight: 20,
     flavour: 'Approved — but the CFO wants "a full debrief deck" after.',
     flight: { cost: 2_700, label: 'premium economy and a lounge pass' } },
-  { value: 100_000, par: 42,  label: '$100k',  weight: 16,
+  { value: 100_000, par: 29,  label: '$100k',  weight: 16,
     flavour: 'The CMO signed it off without reading it. Do not make her read it.',
     flight: { cost: 5_400, label: 'business class, warm nuts' } },
-  { value: 250_000, par: 38,  label: '$250k',  weight: 13,
+  { value: 250_000, par: 26,  label: '$250k',  weight: 13,
     flavour: 'Finance had a good quarter. Finance will not have a good quarter again.',
     flight: { cost: 9_200, label: 'business class with a flat bed you won’t use' } },
-  { value: 750_000, par: 25,  label: '$750k',  weight: 8,
+  { value: 750_000, par: 16,  label: '$750k',  weight: 8,
     flavour: 'New CEO wants to "make some noise". You are the noise.',
     flight: { cost: 31_000, label: 'first class. The pyjamas are yours to keep' } },
-  { value: 2_500_000, par: 9, label: '$2.5M', weight: 5, jackpot: true,
+  { value: 2_500_000, par: 7, label: '$2.5M', weight: 5, jackpot: true,
     flavour: 'The board saw a competitor’s yacht on LinkedIn. Go fix it.',
     flight: { cost: 180_000, label: 'a private jet out of Farnborough' } },
 ];
@@ -37,17 +37,15 @@ export const TRIP_DAYS = [
 ];
 
 export const ARRIVAL_REEL = [
-  { value: 0, label: 'SAT', weight: 14, flavour: 'In before the lanyards. The town is still French.' },
-  { value: 1, label: 'SUN', weight: 30, flavour: 'Settling-in day. The rosé is already cold.' },
-  { value: 2, label: 'MON', weight: 40, flavour: 'Straight off the plane and into it.' },
-  { value: 3, label: 'TUE', weight: 16, flavour: 'Fashionably late. Half the parties already happened.' },
+  { value: 1, label: 'SUN', weight: 45, flavour: 'Settling-in day. The rosé is already cold.' },
+  { value: 2, label: 'MON', weight: 55, flavour: 'Straight off the plane and into it.' },
 ];
 
 export const DEPARTURE_REEL = [
-  { value: 4, label: 'WED', weight: 22, flavour: 'A flying visit. Every hour has to earn its keep.' },
-  { value: 5, label: 'THU', weight: 36, flavour: 'Out before the closing-night carnage.' },
-  { value: 6, label: 'FRI', weight: 32, flavour: 'The full distance. Pace yourself.' },
-  { value: 7, label: 'SAT', weight: 10, flavour: 'You’re staying for the bitter, glittering end.' },
+  { value: 3, label: 'TUE', weight: 14, flavour: 'A 48-hour smash-and-grab. Every hour has to earn its keep.' },
+  { value: 4, label: 'WED', weight: 28, flavour: 'A flying visit. No second chances.' },
+  { value: 5, label: 'THU', weight: 33, flavour: 'Out before the closing-night carnage.' },
+  { value: 6, label: 'FRI', weight: 25, flavour: 'The full distance. Pace yourself.' },
 ];
 
 export const DIGS_REEL = [

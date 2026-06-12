@@ -44,7 +44,7 @@ export const ENCOUNTERS = [
   },
   {
     id: 'foundbadge', tone: 'mixed', weight: 14, once: true,
-    where: ['gutter', 'manolans', 'oldtown', 'stroll'], when: [18, 27],
+    where: ['gutter', 'manolans', 'oldtown'], when: [18, 27],
     cond: (s) => !s.hasPass && s.badge === 'none',
     title: 'A Lanyard, Unattended',
     text: 'There, on a barstool: a festival badge. Full delegate. €4,000 of laminated access, just sitting there. The photo is a man named Henrik who looks almost, sort of, vaguely like you. If you squint. In the dark.',
@@ -80,6 +80,7 @@ export const ENCOUNTERS = [
   },
   {
     id: 'influencer', tone: 'mixed', weight: 8, once: true, when: [10, 22],
+    where: ['carlton', 'cabanas', 'stroll', 'yachtrow'],
     title: 'Reach, Guaranteed*',
     text: 'An influencer with 2.3M followers and sunglasses the size of satellite dishes offers to mention your brand in one (1) story. The price is €10,000. "My audience is basically all CMOs," she says. Her last post was a smoothie.',
     options: [
@@ -117,9 +118,10 @@ export const ENCOUNTERS = [
   },
   {
     id: 'ceocall', tone: 'bad', weight: 10, when: [8, 11], once: true,
+    where: ['cafferoma', 'stroll', 'cabanas'],
     cond: (s) => s.sleepDebt >= 1 || s.flags.gutterNight,
     title: 'An Incoming Call',
-    text: 'Your CEO is calling. It is 9am. You are — technically, legally — still out from last night. Behind you, a DJ who should have stopped hours ago has not stopped.',
+    text: 'Your CEO is calling. It is 9am. You are — technically, legally — still out from last night. Behind you, a beach club is already soundchecking for a party that starts in eleven hours.',
     options: [
       {
         label: 'Answer: "Just at a breakfast networking event!"',
@@ -129,7 +131,7 @@ export const ENCOUNTERS = [
             return 'Technically true — the bar does serve coffee now. He’s impressed by your hustle. "Love the energy. Don’t come back without pipeline." You won’t, boss. You won’t.';
           }
           api.stat('brand', -5); api.stat('joie', -3);
-          return 'The DJ chooses this exact moment to shout "CANNES, MAKE SOME NOISE." A silence. "We’ll talk when you’re back," says your CEO, in the tone of a man updating a spreadsheet about you.';
+          return 'The soundcheck chooses this exact moment to test, at full volume, the chant "CANNES, MAKE SOME NOISE." A silence. "We’ll talk when you’re back," says your CEO, in the tone of a man updating a spreadsheet about you.';
         },
       },
       {
@@ -144,7 +146,7 @@ export const ENCOUNTERS = [
         run({ api, rng, s }) {
           if (s.energy > 40 && rng.chance(0.7)) {
             api.stat('brand', 5);
-            return 'You deliver a flawless pipeline update from memory while a man in a sequinned jacket sleeps on the bar beside you. Your CEO calls it "the best stand-up of the quarter". It was, in every sense.';
+            return 'You deliver a flawless pipeline update from memory while a man in last night’s sequinned jacket sleeps upright at the next table. Your CEO calls it "the best stand-up of the quarter". It was, in every sense.';
           }
           api.stat('brand', -4);
           return 'You confidently report numbers from the wrong quarter, possibly the wrong company. "Are you reading someone else’s deck?" You were, in a way. You were.';
@@ -229,14 +231,15 @@ export const ENCOUNTERS = [
   },
   {
     id: 'awards', tone: 'mixed', weight: 8, once: true, when: [17, 22],
+    where: ['carlton', 'martinez', 'yachtrow', 'palais'],
     cond: (s) => s.dayIdx >= 2,
     title: 'The Big Night',
-    text: 'A spare ticket to tonight’s awards ceremony has materialised — €900 and it’s yours. Black tie, gold statues, a room containing every budget-holder at the festival, and an open bar with a body count.',
+    text: 'A spare ticket to tonight’s awards ceremony has materialised — €1,600 and it’s yours. Black tie, gold statues, a room containing every budget-holder at the festival, and an open bar with a body count.',
     options: [
       {
-        label: 'Go. Stay sharp. Work the room.', cost: 900,
+        label: 'Go. Stay sharp. Work the room.', cost: 1_600,
         run({ api, rng }) {
-          api.spend(900); api.stat('brand', 6); api.stat('energy', -8);
+          api.spend(1_600); api.stat('brand', 6); api.stat('energy', -8);
           if (rng.chance(0.6)) {
             const lead = api.lead(100_000);
             return `You nurse one champagne for three hours like a sniper. Between categories you land the ${lead.name} — ${lead.valueText}. The discipline. The restraint. Unheard of in this town.`;
@@ -245,9 +248,9 @@ export const ENCOUNTERS = [
         },
       },
       {
-        label: 'Go. Surrender to the evening.', cost: 900,
+        label: 'Go. Surrender to the evening.', cost: 1_600,
         run({ api, s }) {
-          api.spend(900); api.stat('joie', 12); api.stat('network', 5); api.stat('energy', -16);
+          api.spend(1_600); api.stat('joie', 12); api.stat('network', 5); api.stat('energy', -16);
           s.sleepDebt += 1;
           return 'You remember: a standing ovation, a conga line containing at least two global CMOs, and crying genuine tears at an ad for insurance. A perfect night. Tomorrow disagrees.';
         },
@@ -265,7 +268,7 @@ export const ENCOUNTERS = [
     id: 'eviction', tone: 'bad', weight: 12, once: true, when: [8, 11],
     cond: (s) => s.digs === 'yacht',
     title: 'A Polite Request',
-    text: 'The yacht’s owner appears at your cabin door in linen. "Tiny thing. Actual clients aboard today — could you make yourself scarce till six? Also maybe don’t mention you sleep here. Or that we’ve met."',
+    text: 'Your phone rings. The yacht’s owner, in a voice of linen-smooth apology: "Tiny thing. Actual clients aboard today — could you stay off the boat till six? Also maybe don’t mention you sleep there. Or that we’ve met."',
     options: [
       {
         label: 'Comply. Vanish like sea mist.',
@@ -356,6 +359,7 @@ export const ENCOUNTERS = [
   },
   {
     id: 'pickpocket', tone: 'bad', weight: 9, when: [8, 11],
+    where: ['stroll', 'cafferoma'],
     cond: (s) => s.digs === 'antibes',
     title: 'The 08:42 from Antibes',
     text: 'The morning train is a sardine tin of lanyards. As you pour out at Cannes, you feel it: your pocket is lighter. You’ve been pickpocketed somewhere between Juan-les-Pins and your dignity.',
@@ -411,6 +415,7 @@ export const ENCOUNTERS = [
   },
   {
     id: 'journalist', tone: 'mixed', weight: 7, when: [9, 19],
+    where: ['palais', 'carlton', 'cafferoma', 'stroll'],
     title: 'On The Record',
     text: 'A trade journalist materialises, recorder already running. "Quick comment on the state of creativity?" Behind her eyes: a deadline, three espressos, and the will to misquote.',
     options: [
@@ -475,7 +480,7 @@ export const ENCOUNTERS = [
           return 'Eleven minutes of actual human conversation. No agenda survives the Gutter Bar queue, and that’s precisely its magic. You part as genuine acquaintances.';
         },
       },
-      { label: 'Offer the bouncer €100 to jump the queue', cost: 100, run({ api, rng }) { api.spend(100); if (rng.chance(0.5)) { api.stat('network', 4); api.stat('joie', 3); return 'The rope opens. The CMO raises an eyebrow: "Efficient. I like efficient." She follows you in. Money CAN buy respect, in increments of one hundred.'; } api.stat('joie', -4); return 'The bouncer pockets the €100, looks through you like glass, and admits two interns instead. The CMO witnesses everything. The queue has rules, and you have learned them.'; } },
+      { label: 'Offer the bouncer €200 to jump the queue', cost: 200, run({ api, rng }) { api.spend(200); if (rng.chance(0.5)) { api.stat('network', 4); api.stat('joie', 3); return 'The rope opens. The CMO raises an eyebrow: "Efficient. I like efficient." She follows you in. Money CAN buy respect, in increments of two hundred.'; } api.stat('joie', -4); return 'The bouncer pockets the €200, looks through you like glass, and admits two interns instead. The CMO witnesses everything. The queue has rules, and you have learned them.'; } },
     ],
   },
   {
@@ -489,9 +494,10 @@ export const ENCOUNTERS = [
   },
   {
     id: 'minibar', tone: 'mixed', weight: 8, when: [23, 27],
+    where: ['stroll', 'carlton', 'martinez', 'gutter'],
     cond: (s) => s.digs === 'hotel',
     title: 'The Minibar Question',
-    text: 'Back in your room, the minibar glows like a shrine. A tube of Pringles: €38. A miniature gin: €31. A "wellness bar" of unclear composition: €24. The prices are a hate crime. The hunger is real.',
+    text: 'You nip back to your room between stops to change shoes. The minibar glows like a shrine. A tube of Pringles: €38. A miniature gin: €31. A "wellness bar" of unclear composition: €24. The prices are a hate crime. The hunger is real.',
     options: [
       { label: 'Eat the €38 Pringles', cost: 38, run({ api }) { api.spend(38); api.stat('joie', 4); api.stat('energy', 3); return 'Once you pop, the invoice is generated automatically. Worth it. At 1am, on the Croisette, the Pringle knows no rival.'; } },
       { label: 'Resist. Drink tap water like a monk.', run({ api }) { api.stat('joie', -2); api.stat('energy', 1); return 'You stand in the dark drinking bathroom-tap water, gazing at the glowing fridge of forbidden snacks. Discipline. The CFO would weep with pride, if the CFO ever wept.'; } },
@@ -535,11 +541,11 @@ export const ENCOUNTERS = [
     id: 'taxisurge', tone: 'bad', weight: 9, when: [25, 27],
     cond: (s) => s.digs !== 'hotel' && s.digs !== 'yacht',
     title: 'Surge Pricing',
-    text: 'It’s deep into the night and the taxi app is showing a price with its own gravitational field: €184 for a journey you could almost throw a croissant along. The little car icons circle like sharks.',
+    text: 'It’s deep into the night and the taxi app is showing a price with its own gravitational field: €290 for a journey you could almost throw a croissant along. The little car icons circle like sharks.',
     options: [
-      { label: 'Pay it. Sleep is priceless.', cost: 184, run({ api }) { api.spend(184); return 'The driver, sensing apex pricing, offers water and a phone charger like an apology. You watch the meter the whole way home in respectful horror.'; } },
+      { label: 'Pay it. Sleep is priceless.', cost: 290, run({ api }) { api.spend(290); return 'The driver, sensing apex pricing, offers water and a phone charger like an apology. You watch the meter the whole way home in respectful horror.'; } },
       { label: 'Walk it (50 minutes)', run({ api }) { api.time(1); api.stat('energy', -7); api.stat('joie', 2); return 'A fifty-minute walk along a silent Croisette, sea on your left, regrets on your right. Genuinely beautiful. Your feet file a formal complaint at minute forty.'; } },
-      { label: 'Unlock one of those scooters', cost: 12, run({ api, rng }) { api.spend(12); if (rng.chance(0.5)) { api.stat('joie', 7); return 'Warm night air, empty promenade, 25km/h of pure illegal-feeling freedom. You arrive home grinning like an idiot. Ten out of ten, no notes.'; } api.stat('energy', -8); api.stat('joie', -3); return 'The Old Town cobbles defeat you at low speed in front of a closing restaurant. Staff applaud. Only your dignity is bruised — and one knee. Mostly the dignity.'; } },
+      { label: 'Unlock one of those scooters', cost: 18, run({ api, rng }) { api.spend(18); if (rng.chance(0.5)) { api.stat('joie', 7); return 'Warm night air, empty promenade, 25km/h of pure illegal-feeling freedom. You arrive home grinning like an idiot. Ten out of ten, no notes.'; } api.stat('energy', -8); api.stat('joie', -3); return 'The Old Town cobbles defeat you at low speed in front of a closing restaurant. Staff applaud. Only your dignity is bruised — and one knee. Mostly the dignity.'; } },
     ],
   },
   {
@@ -577,7 +583,7 @@ export const ENCOUNTERS = [
     ],
   },
   {
-    id: 'oldfriend', tone: 'good', weight: 8, where: ['manolans', 'cafferoma', 'stroll'],
+    id: 'oldfriend', tone: 'good', weight: 8, where: ['manolans', 'cafferoma', 'carlton'],
     title: 'A Face From Before',
     text: 'Across the room: someone from your grad-scheme intake, fifteen years and several careers later. You shared a desk, a hangover or two, and the worst Christmas party in agency history. They are now, the lanyard says, a CEO.',
     options: [

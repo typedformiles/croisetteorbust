@@ -9,15 +9,15 @@ const W = 360, H = 232;
 // venue key → [x, y] anchor on the map
 export const VENUE_POS = {
   oldtown:   [34, 96],
-  manolans:  [62, 121],
-  palais:    [100, 114],
-  cafferoma: [139, 121],
-  stroll:    [167, 133],
+  cafferoma: [63, 121],
+  palais:    [94, 137],
+  manolans:  [137, 116],
+  stroll:    [172, 133],
   carlton:   [207, 108],
   martinez:  [264, 110],
   gutter:    [291, 122],
   cabanas:   [218, 147],
-  yachtrow:  [80, 177],
+  yachtrow:  [30, 165],
 };
 
 const DIGS_POS = {
@@ -107,19 +107,14 @@ function drawScene() {
   px(28, 70, 8, 14, '#EBD7B2'); px(27, 68, 10, 2, '#B98A5C'); px(31, 72, 2, 3, '#6B7FA3'); // tower
   flag(31, 68, '#E2725B');
   // mid row — the grand strip
-  building(56, 104, 16, 24, '#3F7D52', '#27496D', '#FFE49A'); // Ma Nolan's (green pub)
-  px(57, 112, 14, 2, '#FFD166');
-  // THE PALAIS
-  px(76, 100, 48, 28, '#F9F1DE'); px(75, 98, 50, 2, '#E8DAB8');
-  px(80, 92, 40, 8, '#F4EAD2'); px(79, 90, 42, 2, '#E8DAB8');
-  for (let x = 82; x < 118; x += 6) px(x, 94, 3, 3, '#8B9DBE');
-  for (let x = 80; x <= 116; x += 9) flag(x, 90, x % 2 ? '#E2725B' : '#2E93A8');
-  // red carpet steps
-  px(96, 118, 10, 10, '#D33F49'); px(94, 124, 14, 4, '#D33F49'); px(98, 112, 6, 6, '#E25563');
-  px(90, 120, 4, 8, '#EDE2C5'); px(108, 120, 4, 8, '#EDE2C5'); // steps edges
-  // Caffè Roma
-  building(130, 108, 18, 20, '#F7E9CC', '#A14E3C');
-  px(129, 112, 20, 3, '#D33F49'); for (let x = 130; x < 148; x += 4) px(x, 112, 2, 3, '#FBF3E1'); // striped awning
+  // Caffè Roma — cream front, striped awning (west end, by the old town)
+  building(56, 104, 16, 24, '#F7E9CC', '#A14E3C');
+  px(55, 112, 18, 3, '#D33F49'); for (let x = 56; x < 72; x += 4) px(x, 112, 2, 3, '#FBF3E1');
+  // town filler where the Palais used to stand
+  building(76, 100, 20, 28, '#F3E3C5', '#CE7A5B'); building(100, 104, 24, 24, '#EFDCBE', '#C96A4E');
+  // MA NOLAN'S — the green pub
+  building(128, 102, 18, 26, '#3F7D52', '#27496D', '#FFE49A');
+  px(129, 110, 16, 2, '#FFD166');
   // mid filler blocks
   building(152, 100, 22, 28, '#F3E3C5', '#CE7A5B'); building(178, 104, 12, 24, '#EFDCBE', '#D97757');
   // THE CARLTON — white wedding cake, twin domes
@@ -152,6 +147,14 @@ function drawScene() {
   umbrella(216, 147, '#D8A24A', '#FBF3E1'); umbrella(226, 144, '#E2725B', '#FBF3E1');
   umbrella(236, 146, '#2E93A8', '#FBF3E1');
   px(246, 148, 6, 2, '#FBF3E1'); px(190, 149, 5, 2, '#F25CA2'); // towels
+  // THE PALAIS — the white bunker on the waterfront, beside the old port
+  px(70, 122, 48, 32, '#F9F1DE'); px(69, 120, 50, 2, '#E8DAB8');
+  px(74, 114, 40, 8, '#F4EAD2'); px(73, 112, 42, 2, '#E8DAB8');
+  for (let x = 76; x < 112; x += 6) px(x, 115, 3, 3, '#8B9DBE');
+  for (let x = 74; x <= 112; x += 9) flag(x, 112, x % 2 ? '#E2725B' : '#2E93A8');
+  for (let wy = 144; wy < 152; wy += 6) for (let wx = 74; wx < 106; wx += 6) px(wx, wy, 3, 3, '#9FB1CC');
+  // red carpet steps down the east face
+  px(106, 128, 10, 26, '#EDE2C5'); px(108, 130, 6, 24, '#D33F49'); px(109, 124, 4, 6, '#E25563');
   // sea
   px(0, 156, W, 14, '#9FE0DC'); px(0, 170, W, 16, '#66C7CC');
   px(0, 186, W, 20, '#46ABBE'); px(0, 206, W, 26, '#3490A8');
@@ -159,8 +162,10 @@ function drawScene() {
   for (let x = 4; x < W; x += 13) px(x + ((x * 7) % 9), 158 + ((x * 5) % 3), 2, 1, '#E9FBF7');
   for (let x = 9; x < W; x += 17) px(x + ((x * 3) % 7), 173 + ((x * 11) % 4), 2, 1, '#D2F3EE');
   for (let x = 5; x < W; x += 21) px(x + ((x * 13) % 11), 192 + ((x * 7) % 5), 2, 1, '#BFE8E8');
-  // the jetty + YACHT ROW
+  // the jetty + YACHT ROW (label/quay sit WEST of the jetty)
   px(58, 156, 5, 34, '#D9C9A4'); px(58, 156, 5, 1, '#C9B78F');
+  px(6, 160, 52, 4, '#D9C9A4'); px(6, 160, 52, 1, '#C9B78F'); // west quay
+  yacht(12, 155); yacht(34, 154, false);
   yacht(66, 168, true); yacht(86, 175); yacht(70, 186, false); yacht(92, 193, true);
   yacht(120, 182); // the digs yacht slot
   // distant boats

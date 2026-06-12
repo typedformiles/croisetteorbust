@@ -202,7 +202,7 @@ export function rollEncounter(s) {
 
   const pool = ENCOUNTERS.filter((e) => {
     if (!e.weight) return false;
-    if (e.once && s.onceFired[e.id]) return false;
+    if (s.onceFired[e.id]) return false; // every encounter fires at most once per game
     if (e.where && !e.where.includes(s.location)) return false;
     if (e.when && (s.hour < e.when[0] || s.hour > e.when[1])) return false;
     if (e.cond && !e.cond(s)) return false;
@@ -217,7 +217,7 @@ export function rollEncounter(s) {
 }
 
 export function resolveEncounter(s, enc, optionIdx) {
-  if (enc.once) s.onceFired[enc.id] = true;
+  s.onceFired[enc.id] = true;
   const api = makeApi(s);
   const text = enc.options[optionIdx].run({ s, api, rng: rngApi });
   addLog(s, `${enc.title}: ${text}`, 'enc');
@@ -243,8 +243,8 @@ export function finishNight(s, choice = null) {
 
   let nightText = '';
   if (choice === 'taxi') {
-    s.spend += 120;
-    nightText = 'A €120 taxi along a dark coast road, the driver’s playlist an unbroken hour of saxophone. Home. Bed. Salvation.';
+    s.spend += 160;
+    nightText = 'A €160 taxi along a dark coast road, the driver’s playlist an unbroken hour of saxophone. Home. Bed. Salvation.';
   } else if (choice === 'beach') {
     slept = Math.min(slept, 4);
     s.sleepDebt += 1;

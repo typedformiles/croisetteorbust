@@ -81,7 +81,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'rose', label: 'Rosé with the platform people', cost: 350, drink: true,
+        key: 'rose', label: 'Rosé with the platform people', cost: 900, drink: true,
         desc: 'They have quotas. You have a glass.',
         run({ api, rng }) {
           api.stat('network', 5); api.stat('joie', 4); api.stat('energy', -5);
@@ -117,11 +117,11 @@ export const VENUES = [
   },
   {
     key: 'carlton', name: 'Carlton Terrace', open: [9, 26], encChance: 0.24,
-    blurb: 'The industry’s open-air boardroom. €38 rosé, priceless eavesdropping.',
+    blurb: 'The industry’s open-air boardroom. €42 rosé, priceless eavesdropping.',
     mapLabel: 'CARLTON',
     actions: [
       {
-        key: 'rosetable', label: 'Order rosé for the table', cost: 800, drink: true,
+        key: 'rosetable', label: 'Order rosé for the table', cost: 2_400, drink: true,
         desc: 'The table will grow. So will the bill.',
         run({ api, rng }) {
           api.stat('network', 5); api.stat('joie', 4); api.stat('energy', -4);
@@ -133,7 +133,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'dinner', label: 'Host a private rooftop dinner', cost: 12_000, open: [19, 25],
+        key: 'dinner', label: 'Host a private rooftop dinner', cost: 18_000, open: [19, 25],
         desc: 'Twelve seats. Tactical seating plan. One sommelier.',
         run({ api, rng }) {
           api.stat('network', 7); api.stat('joie', 3);
@@ -146,8 +146,8 @@ export const VENUES = [
         },
       },
       {
-        key: 'coffee', label: 'Coffee with a prospect', cost: 60, open: [9, 17],
-        desc: 'Old-fashioned. Effective. €14 per flat white.',
+        key: 'coffee', label: 'Coffee with a prospect', cost: 180, open: [9, 17],
+        desc: 'Old-fashioned. Effective. €16 per flat white, it’s Lions week.',
         run({ api, rng }) {
           api.stat('network', 2);
           if (rng.chance(0.65)) {
@@ -178,7 +178,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'nightcap', label: 'Nightcap at the bar', cost: 190, open: [20, 27], drink: true,
+        key: 'nightcap', label: 'Nightcap at the bar', cost: 380, open: [20, 27], drink: true,
         desc: 'Where the day’s gossip gets settled.',
         run({ api, rng }) {
           api.stat('network', 4); api.stat('joie', 4); api.stat('energy', -5);
@@ -197,7 +197,7 @@ export const VENUES = [
     mapLabel: 'CAFFÈ ROMA',
     actions: [
       {
-        key: 'espresso', label: 'Espresso & croissant', cost: 14,
+        key: 'espresso', label: 'Espresso & croissant', cost: 32,
         desc: 'Repair. Recover. Reload.',
         run({ api, rng, s }) {
           api.stat('energy', 10); api.stat('joie', 2);
@@ -209,7 +209,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'court', label: 'Hold court at a sidewalk table', cost: 90,
+        key: 'court', label: 'Hold court at a sidewalk table', cost: 260,
         desc: 'Stay put. Let Cannes come to you.',
         run({ api, rng }) {
           api.stat('network', 4);
@@ -228,7 +228,7 @@ export const VENUES = [
     mapLabel: 'CABANAS',
     actions: [
       {
-        key: 'block', label: 'Book a cabana meeting block', cost: 2_500,
+        key: 'block', label: 'Book a cabana meeting block', cost: 6_500,
         desc: 'Back-to-backs with a sea view you won’t look at.',
         run({ api }) {
           const a = api.lead(60_000);
@@ -238,7 +238,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'sponsor', label: 'Sponsor tonight’s beach party', cost: 80_000,
+        key: 'sponsor', label: 'Sponsor tonight’s beach party', cost: 125_000,
         desc: 'Your logo. Their drinks. Everyone’s photos.',
         run({ api, rng }) {
           api.stat('brand', 18); api.stat('network', 8); api.stat('joie', 6);
@@ -270,7 +270,7 @@ export const VENUES = [
     mapLabel: 'GUTTER BAR',
     actions: [
       {
-        key: 'onemore', label: '"One more, then bed. Obviously."', cost: 45, drink: true,
+        key: 'onemore', label: '"One more, then bed. Obviously."', cost: 110, drink: true,
         desc: 'A lie, told nightly, by everyone.',
         run({ api, rng }) {
           api.stat('network', 4); api.stat('joie', 5); api.stat('energy', -6);
@@ -282,7 +282,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'closedown', label: 'Close it down', cost: 160, drink: true,
+        key: 'closedown', label: 'Close it down', cost: 420, drink: true,
         desc: 'Tomorrow is a problem for tomorrow-you.',
         run({ api, rng, s }) {
           api.stat('network', 8); api.stat('joie', 9); api.stat('energy', -14);
@@ -302,7 +302,7 @@ export const VENUES = [
     mapLabel: 'MA NOLAN’S',
     actions: [
       {
-        key: 'pint', label: 'An honest pint', cost: 12, drink: true,
+        key: 'pint', label: 'An honest pint', cost: 16, drink: true,
         desc: 'No agenda. The radical move.',
         run({ api }) {
           api.stat('joie', 4); api.stat('energy', 2); api.stat('network', 2);
@@ -310,7 +310,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'chat', label: 'Talk to whoever’s next to you', cost: 24,
+        key: 'chat', label: 'Talk to whoever’s next to you', cost: 70,
         desc: 'Everyone passes through Ma Nolan’s eventually.',
         run({ api, rng }) {
           api.stat('network', 4);
@@ -329,7 +329,7 @@ export const VENUES = [
     mapLabel: 'OLD TOWN',
     actions: [
       {
-        key: 'dinner', label: 'Long dinner up the hill', cost: 120, open: [18, 26],
+        key: 'dinner', label: 'Long dinner up the hill', cost: 340, open: [18, 26],
         desc: 'Two hours of being a human being.',
         run({ api, rng }) {
           api.stat('energy', 8); api.stat('joie', 5); api.stat('network', 3);
@@ -341,7 +341,7 @@ export const VENUES = [
         },
       },
       {
-        key: 'emails', label: 'Solo moules-frites & actually answer emails', cost: 40,
+        key: 'emails', label: 'Solo moules-frites & actually answer emails', cost: 110,
         desc: 'Heroic, in a sad sort of way.',
         run({ api }) {
           api.stat('energy', 6); api.stat('brand', 3); api.stat('joie', -2);
