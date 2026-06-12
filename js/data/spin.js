@@ -19,7 +19,7 @@ export const BUDGET_REEL = [
   { value: 750_000, par: 16,  label: '$750k',  weight: 8,
     flavour: 'New CEO wants to "make some noise". You are the noise.',
     flight: { cost: 31_000, label: 'first class. The pyjamas are yours to keep' } },
-  { value: 2_500_000, par: 2, label: '$2.5M', weight: 5, jackpot: true,
+  { value: 2_500_000, par: 2.5, label: '$2.5M', weight: 5, jackpot: true,
     flavour: 'The board saw a competitor’s yacht on LinkedIn. Go fix it.',
     flight: { cost: 180_000, label: 'a private jet out of Farnborough' } },
 ];
