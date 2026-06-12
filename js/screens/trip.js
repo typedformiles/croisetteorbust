@@ -5,7 +5,7 @@ import { modal, toast } from '../ui.js';
 import { renderMap, updateMap } from '../map.js';
 import { VENUE_MAP } from '../data/venues.js';
 import {
-  cash, dayInfo, isFinalDay, availableActions, act, travel, rollEncounter,
+  cash, roiOf, dayInfo, isFinalDay, availableActions, act, travel, rollEncounter,
   resolveEncounter, resolveBadgeScan, attemptConfidentWalk, startNight,
   finishNight, collapse, checkClock, addLog, DAY_END,
 } from '../engine.js';
@@ -61,7 +61,7 @@ export function tripScreen(root, s, { onEnd }) {
     root.querySelector('#hud-zzz').textContent = s.sleepDebt >= 1 ? '💤'.repeat(Math.min(4, Math.ceil(s.sleepDebt))) : '';
     root.querySelector('#hud-cash').textContent = money(cash(s));
     root.querySelector('#hud-pipe').textContent = money(s.leadValue);
-    const roi = s.spend > 0 ? (s.leadValue / s.spend) : 0;
+    const roi = roiOf(s);
     root.querySelector('#hud-roi').textContent = `${roi >= 10 ? Math.round(roi) : roi.toFixed(1)}x`;
     root.querySelector('#m-energy').style.width = s.energy + '%';
     root.querySelector('#m-energy').parentElement.classList.toggle('low', s.energy < 30);

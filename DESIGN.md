@@ -101,6 +101,7 @@ no shared hand. Replay is the hook; the share card carries the bragging.
 | **Gutter Bar** | late night only. Network + joie spikes, peak encounter danger |
 | **Ma Nolan's** | the honest pint. Mid network, low spend, low risk |
 | **Old Town (Le Suquet)** | cheap dinners, relationship-building, energy recovery |
+| **The Casino** | roulette: red/black/zero at real odds. Stakes count as spend; winnings extend cash but never shrink the ROI denominator |
 | **La Croisette (stroll)** | free, low yield, high serendipity encounter rate |
 
 ### Random encounters

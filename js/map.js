@@ -8,8 +8,9 @@ const W = 360, H = 232;
 
 // venue key → [x, y] anchor on the map
 export const VENUE_POS = {
-  oldtown:   [34, 96],
+  oldtown:   [30, 100],
   cafferoma: [63, 121],
+  casino:    [76, 92],
   palais:    [94, 137],
   manolans:  [137, 116],
   stroll:    [172, 133],
@@ -100,6 +101,13 @@ function drawScene() {
   px(0, 64, W, 1, '#B9A98E'); for (let x = 2; x < W; x += 5) px(x, 65, 2, 1, '#A4937A');
   px(322, 58, 16, 6, '#E2725B'); px(324, 59, 3, 2, '#FFF1D8'); px(330, 59, 3, 2, '#FFF1D8'); // little train
   px(338, 60, 4, 4, '#C95B43');
+  // THE CASINO — gilded deco pile above the Palais
+  px(60, 80, 28, 22, '#FDF8EF'); px(59, 78, 30, 2, '#E8DAB8');
+  px(68, 72, 12, 8, '#FDF8EF'); px(67, 70, 14, 2, '#E8DAB8');
+  px(70, 66, 8, 4, '#D8A24A'); px(72, 64, 4, 2, '#D8A24A'); px(73, 62, 2, 2, '#FFD166'); // gold dome
+  px(61, 83, 26, 3, '#F25CA2'); for (let x = 63; x < 86; x += 4) px(x, 84, 2, 1, '#FFE49A'); // marquee
+  for (let wy = 89; wy < 99; wy += 5) for (let wx = 63; wx < 86; wx += 5) px(wx, wy, 2, 3, '#FFD166');
+  px(71, 96, 6, 6, '#D33F49'); // red carpet step
   // Le Suquet — old town climbing the west hill
   px(0, 78, 56, 50, '#F0E0C2');
   building(2, 84, 12, 16, '#EFD9B4', '#C96A4E'); building(16, 80, 10, 20, '#F4E4C8', '#D97757');

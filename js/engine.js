@@ -16,8 +16,9 @@ export function newTrip(spin) {
     flight: spin.flight, respun: spin.respun,
     arrivalIdx: spin.arrivalIdx, departureIdx: spin.departureIdx,
     digs: spin.digs, digsInfo: spin.digsInfo, hasPass: spin.hasPass,
-    // wallet & pipeline
-    spend: spin.flight.cost, drinkSpend: 0, leadValue: 0, leads: [],
+    // wallet & pipeline. Casino winnings land in `winnings`: they extend your
+    // cash but never shrink `spend` — you can't gamble your ROI clean.
+    spend: spin.flight.cost, winnings: 0, drinkSpend: 0, gambleNet: 0, leadValue: 0, leads: [],
     // meters
     brand: 5, network: 5, joie: 20, energy: 80, sleepDebt: 0,
     // clock & place
@@ -31,7 +32,8 @@ export function newTrip(spin) {
   return s;
 }
 
-export const cash = (s) => s.budget - s.spend;
+export const cash = (s) => s.budget - s.spend + s.winnings;
+export const roiOf = (s) => s.leadValue / Math.max(250, s.spend);
 export const dayInfo = (s) => TRIP_DAYS[s.dayIdx];
 export const isFinalDay = (s) => s.dayIdx === s.departureIdx;
 
@@ -53,6 +55,7 @@ function makeApi(s) {
     },
     time(n) { s.hour += n; s.energy = clamp(s.energy - 2 * n, 0, 100); },
     flag(k) { s.flags[k] = true; },
+    win(amt) { s.winnings += amt; s.gambleNet += amt; },
     lead(base, mult = 1) {
       const raw = base * mult * netMult(s) * energyFactor(s) * debtFactor(s) * credFactor(s) * rnd(0.75, 1.4);
       const value = Math.max(5000, Math.round(raw / 1000) * 1000);
@@ -288,16 +291,17 @@ export function collapse(s) {
 // ---- scoring -----------------------------------------------------------------
 
 export function metrics(s) {
-  const roi = s.spend > 0 ? s.leadValue / s.spend : 0;
+  const roi = roiOf(s);
   const perf = roi / s.par;
   return {
     roi, perf, budget: s.budget, spend: s.spend, leadValue: s.leadValue,
-    leadCount: s.leads.length, drinkSpend: s.drinkSpend,
+    leadCount: s.leads.length, drinkSpend: s.drinkSpend, gambleNet: s.gambleNet,
     brand: s.brand, network: s.network, joie: s.joie,
     hasPass: s.hasPass, collapsed: s.collapsed,
     gutterVisits: s.visits.gutter || 0,
     yachtVisits: s.visits.yachtrow || 0,
     palaisVisits: s.visits.palais || 0,
+    casinoVisits: s.visits.casino || 0,
   };
 }
 

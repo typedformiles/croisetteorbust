@@ -324,6 +324,64 @@ export const VENUES = [
     ],
   },
   {
+    key: 'casino', name: 'The Casino', open: [14, 27], encChance: 0.3,
+    blurb: 'Gilded, hushed, and right by the Palais. Where ad budgets come to experience true volatility.',
+    mapLabel: 'CASINO',
+    actions: [
+      {
+        key: 'redblack', label: '€1,000 on red', cost: 1_000,
+        desc: 'Even-ish odds. The "sensible" bet, by casino standards.',
+        run({ s, api, rng }) {
+          s.gambleNet -= 1_000; api.stat('energy', -2);
+          if (rng.chance(18 / 37)) {
+            api.win(2_000); api.stat('joie', 5);
+            return 'Red. RED! €2,000 slides back across the felt. You are a genius of probability and should absolutely stop now. You will not stop now.';
+          }
+          api.stat('joie', -3);
+          return 'Black. Of course it’s black. The croupier sweeps your chips away with the tenderness of a CFO closing a cost centre.';
+        },
+      },
+      {
+        key: 'black10k', label: '€10,000 on black', cost: 10_000,
+        desc: 'For people whose budget has a budget.',
+        run({ s, api, rng }) {
+          s.gambleNet -= 10_000; api.stat('network', 2); api.stat('energy', -2);
+          if (rng.chance(18 / 37)) {
+            api.win(20_000); api.stat('joie', 8); api.stat('brand', 2);
+            return 'Black hits. €20,000 comes home and a small crowd applauds. Two strangers ask what agency you’re with. Tonight, you ARE the agency.';
+          }
+          api.stat('joie', -5);
+          return 'Red. Ten thousand euros of shareholder value, redistributed in eleven seconds. The croupier doesn’t even make eye contact. Professionals never do.';
+        },
+      },
+      {
+        key: 'zero', label: '€500 on zero', cost: 500,
+        desc: '35-to-1. The CFO’s favourite number, ironically.',
+        run({ s, api, rng }) {
+          s.gambleNet -= 500; api.stat('energy', -2);
+          if (rng.chance(1 / 37)) {
+            api.win(18_000); api.stat('joie', 15); api.stat('network', 4);
+            return 'ZERO. The table ERUPTS. €18,000 in chips gets pushed at you while a man in a velvet jacket kisses your head. The single greatest moment of your professional life, and it has nothing to do with your profession.';
+          }
+          api.stat('joie', -2);
+          return 'Not zero. It was never going to be zero. Zero is a number for dreamers, and you have a debrief deck to live for.';
+        },
+      },
+      {
+        key: 'lurk', label: 'Martini. Observe the whales.', cost: 90, drink: true,
+        desc: 'The cheapest seat at the most expensive show in town.',
+        run({ api, rng }) {
+          api.stat('joie', 3); api.stat('network', 2);
+          if (rng.chance(0.3)) {
+            const lead = api.lead(60_000);
+            return `High-stakes tables loosen senior tongues. Between spins, the ${lead.name} tells you their entire data strategy and takes your card. ${lead.valueText}, no stake required.`;
+          }
+          return 'You nurse one martini for an hour and watch a media agency lose a retainer’s worth on consecutive hard eights. Cheaper than the cinema and twice as educational.';
+        },
+      },
+    ],
+  },
+  {
     key: 'oldtown', name: 'Old Town', open: [9, 26], encChance: 0.25,
     blurb: 'Le Suquet. Cobbles, candlelight, and the best deals happen above sea level.',
     mapLabel: 'OLD TOWN',

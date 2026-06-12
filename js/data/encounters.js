@@ -616,6 +616,88 @@ export const ENCOUNTERS = [
     ],
   },
   {
+    id: 'pitboss', tone: 'mixed', weight: 8, where: ['casino'], once: true,
+    title: 'Monsieur Is Too Kind',
+    text: 'The floor manager glides over, all cufflinks and discretion. "Monsieur. Your usual table is ready. The Krug is already on ice." You have never been here before. He has mistaken you for someone who loses heroically.',
+    options: [
+      {
+        label: 'Accept your usual table',
+        run({ api, rng }) {
+          if (rng.chance(0.5)) {
+            const lead = api.lead(110_000);
+            api.stat('network', 6); api.stat('joie', 6);
+            return `The "usual table" comes with complimentary champagne and two actual whales, one of whom — the ${lead.name} — assumes anyone seated here is worth knowing. ${lead.valueText}, won without placing a bet.`;
+          }
+          api.stat('joie', -3);
+          return 'Twenty minutes of bluffing later, the REAL regular arrives — same haircut, better watch. You are escorted, gently but unmistakably, back to general population. The Krug stays.';
+        },
+      },
+      { label: '"I think you have me confused with someone."', run({ api }) { api.stat('joie', 2); api.stat('network', 1); return '"Of course, Monsieur. My apologies." A pause. "Should Monsieur ever wish to BECOME that someone, we open at two." Genuinely the best sales technique you’ve seen all week, and you’ve seen four thousand.'; } },
+    ],
+  },
+  {
+    id: 'cmoblackjack', tone: 'mixed', weight: 9, where: ['casino'], once: true,
+    title: 'Down Bad',
+    text: 'At the blackjack table: the CMO you’ve been chasing all week. They are losing — properly losing — with the grim focus of someone whose Q3 numbers are also a gamble. The seat beside them is open.',
+    options: [
+      {
+        label: 'Sit down. Lose alongside them.', cost: 800,
+        run({ api, rng }) {
+          api.spend(800); api.stat('joie', 2);
+          if (rng.chance(0.6)) {
+            const lead = api.lead(120_000);
+            api.stat('network', 6);
+            return `You lose €800 in respectful solidarity, and somewhere around the fourth bad hand the walls come down. "Nobody pitches me at a blackjack table," they say. "I like that." Monday call booked — the ${lead.name}, ${lead.valueText}.`;
+          }
+          return 'You lose €800 together in companionable silence. They nod at you on departure — the nod of shared ruin. Not pipeline, but not nothing.';
+        },
+      },
+      { label: 'Quietly suggest they walk away', run({ api, rng }) { if (rng.chance(0.5)) { api.stat('network', 8); const lead = api.lead(80_000); return `They stare at you, then at the table, then push back their chair. "You’re the only person this week who’s told me to spend LESS." The ${lead.name} owes you one — ${lead.valueText} worth, it turns out.`; } api.stat('network', -4); return '"I’m sorry — do you work for my wife?" They double down out of spite, win, and point at you while collecting. The story will not be told in your favour.'; } },
+      { label: 'Leave them their dignity', run({ api }) { api.stat('joie', 1); return 'Some moments aren’t networking opportunities. You drift past, unseen. Tomorrow they’ll be a CMO again; tonight they’re just a person versus mathematics.'; } },
+    ],
+  },
+  {
+    id: 'luckychip', tone: 'good', weight: 7, where: ['casino'], once: true,
+    title: 'A Chip on the Carpet',
+    text: 'Under your shoe: a €100 chip, abandoned to the carpet like a startup’s second pivot. Nobody is looking. Everybody, in a casino, is technically always looking.',
+    options: [
+      {
+        label: 'Straight onto zero. Fate demands it.',
+        run({ s, api, rng }) {
+          if (rng.chance(1 / 37)) {
+            api.win(3_500); api.stat('joie', 12);
+            return 'ZERO. THE FOUND CHIP HITS ZERO. €3,500 of pure cosmic comedy. The croupier allows himself one eyebrow. You will tell this story at every dinner until you die.';
+          }
+          api.stat('joie', 2);
+          return 'It lands on 23. The universe gave you a free chip and took it back in nine seconds — the full Cannes experience in miniature. Still a great story.';
+        },
+      },
+      { label: 'Cash it in like a coward', run({ api }) { api.win(100); return 'One hundred euros, laundered into your pocket via window. The most honest money you’ll make all week, in that nobody had to sit through a deck for it.'; } },
+      { label: 'Hand it to the croupier', run({ api }) { api.stat('joie', 1); api.stat('network', 1); return '"Monsieur." The croupier inclines his head four degrees — the casino equivalent of a standing ovation. Several gamblers regard you as either a saint or an idiot. In here, same thing.'; } },
+    ],
+  },
+  {
+    id: 'procurement', tone: 'bad', weight: 7, where: ['casino'], when: [20, 27], once: true,
+    title: 'A Familiar Face at the Roulette Table',
+    text: 'At the far roulette table, hunched and sweating: your company’s Head of Procurement. The man who rejected your €40 taxi receipt in March. In front of him: a stack of chips that looks suspiciously like the Q3 events budget.',
+    options: [
+      { label: 'Make eye contact. Hold it. Say nothing.', run({ api }) { api.stat('joie', 7); api.flag('procurementLeverage'); return 'His face does something complicated. You nod — the slow nod of a person whose expense reports will never be questioned again — and glide away. Power has changed hands tonight, silently, forever.'; } },
+      {
+        label: 'Pull up a chair: "What are we playing?"', cost: 500,
+        run({ s, api, rng }) {
+          api.spend(500); s.gambleNet -= 500;
+          if (rng.chance(0.5)) {
+            api.win(1_500); api.stat('joie', 6); api.stat('network', 3);
+            return 'You win €1,500 together on a shared red and become, against every policy he has ever written, friends. "The taxi thing," he says at 1am, "that was petty of me." Healing.';
+          }
+          api.stat('joie', 3);
+          return 'You lose together. Bonding through mutual destruction — the procurement way. He approves your next expense report from the table, on his phone, in full.';
+        },
+      },
+      { label: 'Photograph nothing. You’re better than that.', run({ api }) { api.stat('joie', 2); return 'You walk away clean. Some leverage corrupts the soul, and besides — knowing is enough. Knowing is always enough.'; } },
+    ],
+  },
+  {
     id: 'wifi', tone: 'good', weight: 5, where: ['palais'],
     title: 'Connectivity Issues',
     text: 'The Palais wifi collapses under the weight of four thousand people uploading the same photo of the same stage. Around you, demos die mid-sentence. A man whispers "it works on the conference network" to a screen that knows it doesn’t.',

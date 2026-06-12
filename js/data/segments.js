@@ -21,6 +21,18 @@ export const SEGMENTS = [
     tip: 'Neura notes: an improbable share of your pipeline has "agreed at 2am" in the notes field.',
   },
   {
+    key: 'degenerate', name: 'THE DEGENERATE',
+    match: (m) => m.gambleNet <= -Math.max(3_000, m.budget * 0.15),
+    desc: 'You came for the festival and found the roulette table. A meaningful slice of your budget now belongs to a casino, and your expense report reads like a confession.',
+    tip: 'Neura has reclassified your "client entertainment" line as "entertainment".',
+  },
+  {
+    key: 'croupier', name: 'THE CROUPIER’S NIGHTMARE',
+    match: (m) => m.gambleNet >= Math.max(6_000, m.budget * 0.2),
+    desc: 'You beat the house. At Cannes. While sober enough to remember it. Your pipeline is real but your true ROI came off a wheel, and everyone at the table knows your name.',
+    tip: 'Neura recommends: never returning. Legends don’t do sequels.',
+  },
+  {
     key: 'leech', name: 'YACHT LEECH',
     match: (m) => m.yachtVisits >= 3 && m.spend < m.budget * 0.25,
     desc: 'You spent the week aboard other people’s boats drinking other people’s champagne. Not one euro of hospitality was yours. Magnificent.',

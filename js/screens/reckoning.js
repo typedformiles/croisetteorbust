@@ -14,14 +14,18 @@ export function reckoningScreen(root, s, { onReplay }) {
   const passEmoji = s.hasPass ? '🎫' : s.badge === 'borrowed' ? '🪪😬' : '🚫🎫';
   const topLeads = [...s.leads].sort((a, b) => b.value - a.value).slice(0, 5);
 
+  const casinoLine = Math.abs(m.gambleNet) >= 1000
+    ? `🎰 casino: ${m.gambleNet > 0 ? '+' : '−'}${money(Math.abs(m.gambleNet))}`
+    : null;
   const shareText = [
     'CROISETTE OR BUST 🥐',
     `${money(s.budget)} budget · ${nights} nights · ${s.digsInfo.label} ${passEmoji}`,
     `${money(m.leadValue)} pipeline on ${money(m.spend)} spend → ${roiText} ROI`,
+    casinoLine,
     `${award.icon} ${award.name}`,
     `🧠 Neura segmented me: ${segment.name}`,
     `▶ ${GAME_URL}`,
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 
   root.innerHTML = `
     <div class="screen reckoning">
@@ -51,7 +55,7 @@ export function reckoningScreen(root, s, { onReplay }) {
         <div><label>BRAND</label><b>${m.brand}</b></div>
         <div><label>NETWORK</label><b>${m.network}</b></div>
         <div><label>JOIE</label><b>${m.joie}</b></div>
-        <div><label>ROSÉ BILL</label><b>${money(m.drinkSpend)}</b></div>
+        <div><label>${Math.abs(m.gambleNet) >= 1000 ? 'CASINO' : 'ROSÉ BILL'}</label><b>${Math.abs(m.gambleNet) >= 1000 ? (m.gambleNet > 0 ? '+' : '−') + money(Math.abs(m.gambleNet)) : money(m.drinkSpend)}</b></div>
       </div>
 
       ${topLeads.length ? `
