@@ -75,7 +75,7 @@ export function reckoningScreen(root, s, { onReplay }) {
         </div>
       </div>
 
-      <footer class="credit">a silly game by <a href="https://neuralift.ai" target="_blank" rel="noopener">neuralift.ai</a> — we segment real audiences too, allegedly</footer>
+      <footer class="credit">a silly game by <a href="https://neuralift.ai" target="_blank" rel="noopener">Neuralift.ai</a> — turnkey deep learning on your 1st party data that lifts your KPIs!</footer>
     </div>`;
 
   if (m.perf >= 1.5) confetti(120);
