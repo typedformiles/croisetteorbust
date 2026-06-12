@@ -13,11 +13,11 @@ export const VENUE_POS = {
   casino:    [76, 92],
   palais:    [94, 137],
   manolans:  [137, 116],
-  stroll:    [172, 133],
+  stroll:    [218, 133],
   carlton:   [207, 108],
   martinez:  [264, 110],
   gutter:    [291, 122],
-  cabanas:   [218, 147],
+  cabanas:   [148, 147],
   yachtrow:  [30, 165],
 };
 
@@ -151,10 +151,10 @@ function drawScene() {
   // beach
   px(0, 138, W, 18, '#F2DFAC');
   px(0, 138, W, 2, '#EAD49B');
-  umbrella(196, 146, '#E2725B', '#FBF3E1'); umbrella(206, 144, '#2E93A8', '#FBF3E1');
-  umbrella(216, 147, '#D8A24A', '#FBF3E1'); umbrella(226, 144, '#E2725B', '#FBF3E1');
-  umbrella(236, 146, '#2E93A8', '#FBF3E1');
-  px(246, 148, 6, 2, '#FBF3E1'); px(190, 149, 5, 2, '#F25CA2'); // towels
+  umbrella(126, 146, '#E2725B', '#FBF3E1'); umbrella(136, 144, '#2E93A8', '#FBF3E1');
+  umbrella(146, 147, '#D8A24A', '#FBF3E1'); umbrella(156, 144, '#E2725B', '#FBF3E1');
+  umbrella(166, 146, '#2E93A8', '#FBF3E1');
+  px(176, 148, 6, 2, '#FBF3E1'); px(120, 149, 5, 2, '#F25CA2'); // towels
   // THE PALAIS — the white bunker on the waterfront, beside the old port
   px(70, 122, 48, 32, '#F9F1DE'); px(69, 120, 50, 2, '#E8DAB8');
   px(74, 114, 40, 8, '#F4EAD2'); px(73, 112, 42, 2, '#E8DAB8');
