@@ -1,4 +1,4 @@
-// The Reckoning — scores, the Neura segmentation, and the share card.
+// The Reckoning — scores, the Neuralift segment, and the share card.
 
 import { money, esc } from '../util.js';
 import { toast, confetti } from '../ui.js';
@@ -23,7 +23,7 @@ export function reckoningScreen(root, s, { onReplay }) {
     `${money(m.leadValue)} pipeline on ${money(m.spend)} spend → ${roiText} ROI`,
     casinoLine,
     `${award.icon} ${award.name}`,
-    `🧠 Neura segmented me: ${segment.name}`,
+    `🧠 My Neuralift segment: ${segment.name}`,
     `▶ ${GAME_URL}`,
   ].filter(Boolean).join('\n');
 
@@ -41,7 +41,7 @@ export function reckoningScreen(root, s, { onReplay }) {
       </div>
 
       <div class="segment-card">
-        <div class="seg-kicker">NEURA HAS SEGMENTED YOU</div>
+        <div class="seg-kicker">YOUR NEURALIFT SEGMENT</div>
         <h3 class="pixel-h">${esc(segment.name)}</h3>
         <p>${esc(segment.desc)}</p>
         <p class="seg-tip">${esc(segment.tip)}</p>
@@ -75,7 +75,7 @@ export function reckoningScreen(root, s, { onReplay }) {
         </div>
       </div>
 
-      <footer class="credit">a silly game by <a href="https://neuralift.ai" target="_blank" rel="noopener">neuralift.ai</a> — Neura segments real audiences too, allegedly</footer>
+      <footer class="credit">a silly game by <a href="https://neuralift.ai" target="_blank" rel="noopener">neuralift.ai</a> — we segment real audiences too, allegedly</footer>
     </div>`;
 
   if (m.perf >= 1.5) confetti(120);

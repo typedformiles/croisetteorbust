@@ -34,7 +34,7 @@ async function showHow() {
     body: `
       <p><b>1. The Spin.</b> Five reels decide your budget, your dates, your digs and whether you even get a festival badge. You get one appeal to Finance — a full re-spin, minus 10% of whatever budget lands.</p>
       <p><b>2. The Trip.</b> Move around the map. Every move and every action costs an hour. Venues open and close. Meetings make pipeline; rosé makes friends; the Gutter Bar makes both, at a price. Choose when to call it a night — tired people attract bad encounters.</p>
-      <p><b>3. The Reckoning.</b> Your score is ROI: pipeline ÷ spend, graded fairly against your budget tier. A $5k shoestring can beat a $2.5M yacht week. At the end, Neura segments you — and you'll deserve it.</p>`,
+      <p><b>3. The Reckoning.</b> Your score is ROI: pipeline ÷ spend, graded fairly against your budget tier. A $5k shoestring can beat a $2.5M yacht week. At the end you get your Neuralift segment — and you'll deserve it.</p>`,
     options: [{ label: 'Got it' }],
   });
 }

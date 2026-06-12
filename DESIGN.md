@@ -137,7 +137,7 @@ encounter is tied to venues where its text makes sense. Industry-twisted Dope Wa
 - **Headline: ROI ratio** = Lead Value ÷ Spend. Shoestring runs can win big.
 - Secondary: total Lead Value (so the $2.5M whale run has bragging rights too),
   Brand Lift, Network, Joie.
-- **The Neuralift moment:** "**Neura has segmented you.**" Playstyle-derived
+- **The Neuralift moment:** "**Your Neuralift segment**." Playstyle-derived
   audience persona — *Gutter Bar Goblin, Yacht Leech, Palais Purist, ROI
   Machine, Rosé Casualty, The CFO's Favourite, Fringe Operator…* This is the
   brand tie-in: the product does AI segmentation, the game ends by segmenting
