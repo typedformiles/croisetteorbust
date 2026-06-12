@@ -370,11 +370,20 @@ export function finishNight(s, choice = null) {
 export function collapse(s) {
   s.collapsed = true;
   expireSneak(s);
-  const text = 'Your body, having submitted several unanswered complaints, escalates to a full shutdown. You wake up fourteen hours later in your own bed with no memory of getting there and a kebab of unknown provenance on the nightstand.';
+  // The blackout costs real pipeline: tomorrow's follow-ups die with the no-show.
+  const lost = Math.round(s.leadValue * 0.15);
+  s.leadValue -= lost;
+  s.leads.forEach((l) => { l.value = Math.round(l.value * 0.85); l.valueText = money(l.value); });
+  s.brand = clamp(s.brand - 4, 0, 100);
+  let text = 'Your body, having submitted several unanswered complaints, escalates to a full shutdown. You wake up fourteen hours later in your own bed with no memory of getting there and a kebab of unknown provenance on the nightstand.';
+  if (lost > 0) {
+    text += ` You also slept through a breakfast follow-up and two "quick calls" — ${money(lost)} of pipeline quietly cools to room temperature, and the no-show story travels.`;
+  }
   addLog(s, text, 'bad');
   s.hour = Math.max(s.hour, 24);
   const res = finishNight(s, null);
-  s.energy = 55;
+  s.energy = 40;
+  s.sleepDebt += 1;
   s.flags.gutterNight = false;
   return { text, ...res };
 }
