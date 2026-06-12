@@ -282,6 +282,12 @@ a { color: var(--azure-dark); }
 .modal.good .modal-title { color: var(--green); }
 .modal-body { font-size: 14.5px; line-height: 1.6; }
 .modal-body p { margin: 0 0 10px; }
+.sponsor-email {
+  background: var(--sand); border: 2px dashed #C9B88E; border-radius: 3px;
+  padding: 12px; text-align: center; font-size: 15px;
+}
+.sponsor-email a { color: var(--azure-dark); text-decoration: none; }
+.sponsor-email b { font-size: 17px; }
 .modal-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
 .modal-options .btn { text-align: left; font-size: 10px; line-height: 1.5; }
 .opt-sub { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 12px; opacity: 0.85; margin-top: 4px; }

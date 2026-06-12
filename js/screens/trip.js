@@ -233,14 +233,21 @@ export function tripScreen(root, s, { onEnd }) {
     const i = await modal({
       kicker: 'PRIME BEACHFRONT · AVAILABLE NOW', title: 'Sponsor This Plage',
       body: `<p>This pristine stretch of pixel sand could be YOURS for the festival. Your logo on the umbrellas. A branded in-game day. Custom encounters starring your brand — while your competitor gets mysteriously yacht-blocked.</p>
-             <p>The first plage in advertising history with a verifiable 100% share of beach.</p>`,
+             <p>The first plage in advertising history with a verifiable 100% share of beach.</p>
+             <p class="sponsor-email">Enquiries, serious and otherwise:<br>
+             <a href="mailto:tim@neuralift.ai?subject=${encodeURIComponent('Sponsoring a plage in Croisette or Bust 🥐')}"><b>tim@neuralift.ai</b></a></p>`,
       options: [
-        { label: '📧 Enquire about sponsoring', sub: 'opens an email — serious and unserious enquiries welcome' },
+        { label: '📋 Copy the email address' },
         { label: 'Back to the Croisette' },
       ],
     });
     if (i === 0) {
-      window.open('mailto:tim@neuralift.ai?subject=' + encodeURIComponent('Sponsoring a plage in Croisette or Bust 🥐'));
+      try {
+        await navigator.clipboard.writeText('tim@neuralift.ai');
+        toast('tim@neuralift.ai copied — we await your logo.');
+      } catch {
+        toast('Copy blocked — it’s tim@neuralift.ai');
+      }
     }
   }
 
