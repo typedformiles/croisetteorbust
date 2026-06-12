@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Social card compositor — screenshot this page at exactly 1200x630 to produce assets/og-card.png -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; }
+    .stage { position: relative; width: 1200px; height: 630px; overflow: hidden; background: #9FE0DC; }
+    .stage #map svg { position: absolute; top: -90px; left: -30px; width: 1280px; height: auto; display: block; }
+    .stage #map .hotspot, .stage #map #player, .stage #map .digs-marker { display: none; }
+    .overlay {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 22px;
+      background: radial-gradient(ellipse at center, rgba(255,251,241,0.30) 0%, rgba(39,49,74,0.18) 100%);
+    }
+    .card {
+      background: rgba(255, 251, 241, 0.96); border: 5px solid #27314A; border-radius: 6px;
+      box-shadow: 12px 12px 0 rgba(39,49,74,0.55); padding: 52px 78px; text-align: center;
+    }
+    h1 { font-family: 'Press Start 2P', monospace; font-size: 52px; line-height: 1.35; margin: 0 0 26px;
+         color: #E2725B; text-shadow: 4px 4px 0 rgba(39,49,74,0.18); }
+    h1 span { color: #20748A; }
+    .tag { font-family: 'Space Grotesk', sans-serif; font-size: 27px; font-weight: 500; color: #27314A; margin: 0 0 30px; }
+    .cta { font-family: 'Press Start 2P', monospace; font-size: 17px; color: #FFFBF1; background: #D8A24A;
+           border: 3px solid #27314A; box-shadow: 0 6px 0 #27314A; display: inline-block; padding: 18px 30px; color: #27314A; }
+    .brand { font-family: 'Press Start 2P', monospace; font-size: 14px; color: #7E0CF7; margin-top: 30px; }
+    .croissant { font-size: 44px; position: absolute; top: 30px; right: 44px; transform: rotate(12deg); }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div id="map"></div>
+    <div class="overlay">
+      <div class="card">
+        <div class="croissant">🥐</div>
+        <h1>CROISETTE<br><span>OR BUST</span></h1>
+        <p class="tag">Survive the festival. Come home with ROI.</p>
+        <div class="cta">PLAY AT CROISETTEORBUST.COM</div>
+        <div class="brand">A SILLY GAME BY NEURALIFT.AI</div>
+      </div>
+    </div>
+  </div>
+  <script type="module">
+    import { renderMap } from '../js/map.js';
+    renderMap(document.getElementById('map'));
+  </script>
+</body>
+</html>
