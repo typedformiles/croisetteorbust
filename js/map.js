@@ -156,6 +156,10 @@ function drawScene() {
   umbrella(146, 147, '#D8A24A', '#FBF3E1'); umbrella(156, 144, '#E2725B', '#FBF3E1');
   umbrella(166, 146, '#2E93A8', '#FBF3E1');
   px(176, 148, 6, 2, '#FBF3E1'); px(120, 149, 5, 2, '#F25CA2'); // towels
+  // the unsponsored plage — grey umbrellas, waiting for a logo
+  umbrella(298, 146, '#CFC8B8', '#E5DFD2'); umbrella(308, 144, '#CFC8B8', '#E5DFD2');
+  umbrella(318, 147, '#CFC8B8', '#E5DFD2');
+  px(327, 140, 1, 9, '#8A6B4A'); px(323, 138, 9, 4, '#FFFBF1'); px(324, 139, 7, 2, '#F25CA2'); // sign
   // THE PALAIS — the white bunker on the waterfront, beside the old port
   px(70, 122, 48, 32, '#F9F1DE'); px(69, 120, 50, 2, '#E8DAB8');
   px(74, 114, 40, 8, '#F4EAD2'); px(73, 112, 42, 2, '#E8DAB8');
@@ -212,6 +216,10 @@ export function renderMap(container) {
       <text class="dm-label" y="-13" text-anchor="middle">HOME</text>
     </g>
     ${markers}
+    <g class="sponsor-spot" transform="translate(310,150)">
+      <circle class="hit" r="16" cx="0" cy="-3"></circle>
+      <text class="sp-label" y="11" text-anchor="middle">SPONSOR THIS PLAGE!</text>
+    </g>
     <g id="player">
       <circle class="p-glow" r="9"></circle>
       <circle class="p-ring" r="6"></circle>

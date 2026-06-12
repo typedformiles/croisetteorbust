@@ -229,7 +229,23 @@ export function tripScreen(root, s, { onEnd }) {
 
   // ---- wire up ----
 
+  async function showSponsorPitch() {
+    const i = await modal({
+      kicker: 'PRIME BEACHFRONT · AVAILABLE NOW', title: 'Sponsor This Plage',
+      body: `<p>This pristine stretch of pixel sand could be YOURS for the festival. Your logo on the umbrellas. A branded in-game day. Custom encounters starring your brand — while your competitor gets mysteriously yacht-blocked.</p>
+             <p>The first plage in advertising history with a verifiable 100% share of beach.</p>`,
+      options: [
+        { label: '📧 Enquire about sponsoring', sub: 'opens an email — serious and unserious enquiries welcome' },
+        { label: 'Back to the Croisette' },
+      ],
+    });
+    if (i === 0) {
+      window.open('mailto:tim@neuralift.ai?subject=' + encodeURIComponent('Sponsoring a plage in Croisette or Bust 🥐'));
+    }
+  }
+
   root.querySelector('#map-wrap').addEventListener('click', (e) => {
+    if (e.target.closest('.sponsor-spot')) { showSponsorPitch(); return; } // no game time spent — it's an ad
     const g = e.target.closest('.hotspot');
     if (g) onVenueClick(g.dataset.venue);
   });

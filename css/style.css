@@ -208,6 +208,16 @@ a { color: var(--azure-dark); }
 .hotspot.closed { opacity: 0.45; }
 .hotspot.closed .closed-ico { display: block; }
 .hotspot.locked .pin rect { fill: #8A8A8A; }
+.sponsor-spot { cursor: pointer; }
+.sponsor-spot .hit { fill: transparent; }
+.sponsor-spot .sp-label {
+  font-family: 'Press Start 2P', monospace; font-size: 4.5px; fill: #7E0CF7;
+  stroke: #FFFBF1; stroke-width: 1.6; paint-order: stroke;
+  animation: sp-blink 2.4s ease-in-out infinite;
+}
+@keyframes sp-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+.title-map .sponsor-spot { display: none; }
+
 #player { transition: transform 0.45s ease; pointer-events: none; }
 #player circle { shape-rendering: geometricPrecision; } /* the map is crispEdges; the beacon shouldn't be */
 #player .p-core { fill: #FF3D7F; stroke: #FFFBF1; stroke-width: 1.6; r: 3.5; }
