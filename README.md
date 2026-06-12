@@ -13,7 +13,7 @@ Your score is ROI — pipeline ÷ spend, graded fairly against your budget tier,
 so a $5k shoestring can out-croissant a $2.5M yacht week. At the end you get
 your **Neuralift segment**, and you will deserve it.
 
-**Play:** https://typedformiles.github.io/croisetteorbust/
+**Play:** https://croisetteorbust.com
 
 ## Stack
 

@@ -5,7 +5,7 @@ import { toast, confetti } from '../ui.js';
 import { finalReport } from '../engine.js';
 import { TRIP_DAYS } from '../data/spin.js';
 
-const GAME_URL = 'https://typedformiles.github.io/croisetteorbust/';
+const GAME_URL = 'https://croisetteorbust.com/';
 
 export function reckoningScreen(root, s, { onReplay }) {
   const { m, segment, award } = finalReport(s);
