@@ -347,10 +347,13 @@ export function finishNight(s, choice = null) {
   if (slept >= 9) s.sleepDebt = Math.max(0, s.sleepDebt - 1);
   s.sleepDebt = Math.round(s.sleepDebt * 2) / 2;
 
-  let recovery = slept * 9;
-  if (s.digsInfo.sleepBonus) { recovery += 6; s.sleepDebt = Math.max(0, s.sleepDebt - 0.5); }
-  if (choice === 'beach') recovery = slept * 5;
-  s.energy = clamp(s.energy + recovery, 0, 100);
+  // Wake-up energy is SET by how long you slept (small carryover from
+  // bedtime state) — not added to it. 4h sleep means a 4h-sleep morning,
+  // no matter how fresh you felt at 4am. ~8h+ ≈ full.
+  let wake = slept * 11 + s.energy * 0.15;
+  if (s.digsInfo.sleepBonus) { wake += 7; s.sleepDebt = Math.max(0, s.sleepDebt - 0.5); }
+  if (choice === 'beach') wake = slept * 6;
+  s.energy = clamp(Math.round(wake), 0, 100);
 
   s.dayIdx += 1;
   s.hour = nextStart;
