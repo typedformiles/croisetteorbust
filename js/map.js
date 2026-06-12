@@ -212,11 +212,9 @@ export function renderMap(container) {
     </g>
     ${markers}
     <g id="player">
-      <rect x="-2" y="-12" width="4" height="3" fill="#E8B88A"></rect>
-      <rect x="-3" y="-9" width="6" height="5" fill="#E2725B"></rect>
-      <rect x="-2" y="-4" width="2" height="3" fill="#27496D"></rect>
-      <rect x="0" y="-4" width="2" height="3" fill="#27496D"></rect>
-      <rect x="-3" y="-14" width="6" height="2" fill="#FBF3E1"></rect>
+      <circle class="p-glow" r="9"></circle>
+      <circle class="p-ring" r="6"></circle>
+      <circle class="p-core" r="3"></circle>
     </g>
   </svg>`;
 }
@@ -227,7 +225,7 @@ export function updateMap(s, DAY_END) {
   // player position
   const pos = VENUE_POS[s.location] || VENUE_POS.stroll;
   const player = svg.querySelector('#player');
-  player.setAttribute('transform', `translate(${pos[0]},${pos[1] - 6})`);
+  player.setAttribute('transform', `translate(${pos[0]},${pos[1] - 5})`);
   // digs marker
   const dm = svg.querySelector('.digs-marker');
   const dp = DIGS_POS[s.digs];

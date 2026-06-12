@@ -189,8 +189,12 @@ a { color: var(--azure-dark); }
 .hotspot.closed .closed-ico { display: block; }
 .hotspot.locked .pin rect { fill: #8A8A8A; }
 #player { transition: transform 0.45s ease; pointer-events: none; }
-#player rect { animation: bob 1.4s ease-in-out infinite; }
-@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
+#player circle { shape-rendering: geometricPrecision; } /* the map is crispEdges; the beacon shouldn't be */
+#player .p-core { fill: #FF3D7F; stroke: #FFFBF1; stroke-width: 1.6; r: 3.5; }
+#player .p-ring { fill: none; stroke: #FF3D7F; stroke-width: 1.8; animation: ping 1.6s ease-out infinite; }
+#player .p-glow { fill: #FF3D7F; opacity: 0.22; animation: glowpulse 1.6s ease-in-out infinite; }
+@keyframes ping { 0% { r: 4; opacity: 0.95; } 75% { r: 13; opacity: 0; } 100% { r: 13; opacity: 0; } }
+@keyframes glowpulse { 0%, 100% { opacity: 0.14; } 50% { opacity: 0.32; } }
 .digs-marker .dm-roof { fill: var(--terracotta-dark); }
 .digs-marker .dm-body { fill: var(--paper); stroke: var(--ink); stroke-width: 0.8; }
 .digs-marker .dm-label {
