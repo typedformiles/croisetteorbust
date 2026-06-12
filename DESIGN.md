@@ -76,6 +76,11 @@ no shared hand. Replay is the hook; the share card carries the bragging.
 - Each night you choose when to call it. Sleep < 6h adds SLEEP DEBT:
   shifts random-encounter rolls toward bad outcomes and dulls action yields
   the next day.
+- **Exhaustion mishaps:** below 35 energy, bad things just HAPPEN — no choice,
+  no visible dice (lost phone = −25% pipeline, falling asleep on a prospect,
+  wrong-chat texts, card chaos, lost badge). Probability scales hard with
+  lateness (×3 after 2am) and sleep debt. Public failures (Palais rejection,
+  yacht-block, failed bribes) also cost Network — people SAW that.
 - **Antibes LAST TRAIN:** out past 00:50 → choose €120 taxi (spend) or sleep
   on the beach (energy crash + guaranteed morning encounter roll).
 

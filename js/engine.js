@@ -108,7 +108,8 @@ export function travel(s, key) {
     if (!aboard) {
       s.location = 'stroll';
       s.joie = clamp(s.joie - 2, 0, 100);
-      addLog(s, 'Yacht-blocked. A clipboard reviews you, finds you wanting, and suggests "the public beach is lovely". You retreat along the boardwalk.', 'bad');
+      s.network = clamp(s.network - 3, 0, 100);
+      addLog(s, 'Yacht-blocked. A clipboard reviews you, finds you wanting, and suggests "the public beach is lovely" — at gangway volume, in front of a deck party that briefly stops to enjoy it. You retreat along the boardwalk.', 'bad');
       return { ok: false, text: 'yachtblocked' };
     }
   }
@@ -134,7 +135,8 @@ export function resolveBadgeScan(s) {
   s.palaisFlagged = true;
   advance(s, 2);
   s.brand = clamp(s.brand - 8, 0, 100);
-  let text = 'The scanner flashes red. Henrik, it turns out, reported his badge missing — and Henrik is 5\'4". Two hours in a windowless room explaining yourself to festival security, who have heard it all and enjoyed none of it. You are now flagged at every Palais entrance.';
+  s.network = clamp(s.network - 5, 0, 100);
+  let text = 'The scanner flashes red. Henrik, it turns out, reported his badge missing — and Henrik is 5\'4". Two hours in a windowless room explaining yourself to festival security, who have heard it all and enjoyed none of it. You are now flagged at every Palais entrance — and the entire badge queue watched you get marched away.';
   if (chance(0.3)) {
     s.flags.bossHeard = true;
     text += ' Worse: someone from your industry WhatsApp group was in the queue behind you. Your boss knows by lunchtime.';
@@ -155,9 +157,10 @@ export function attemptConfidentWalk(s) {
     return { ok: true, text };
   }
   s.joie = clamp(s.joie - 2, 0, 100);
+  s.network = clamp(s.network - 4, 0, 100);
   const text = s.palaisFlagged
-    ? 'The security guard recognises you before you finish your first confident stride. "Monsieur." Just that. Just "Monsieur." You about-face with whatever dignity remains on your person.'
-    : 'You deploy the confident walk. Security deploys the outstretched arm. "Badge?" The single most expensive word in advertising. You rejoin the badgeless masses.';
+    ? 'The security guard recognises you before you finish your first confident stride. "Monsieur." Just that. Just "Monsieur." You about-face with whatever dignity remains on your person, in full view of a coffee queue containing at least two people you pitched yesterday.'
+    : 'You deploy the confident walk. Security deploys the outstretched arm. "Badge?" The single most expensive word in advertising. The entire entrance plaza watches you get turned around — including, inevitably, people whose names you know.';
   addLog(s, text, 'bad');
   return { ok: false, text };
 }
@@ -217,6 +220,91 @@ export function rollEncounter(s) {
   const enc = pickWeighted(pool, (e) =>
     e.weight * (e.tone === 'bad' ? badBias : e.tone === 'good' && s.sleepDebt >= 3 ? 0.7 : 1));
   return enc;
+}
+
+// ---- exhaustion mishaps ----------------------------------------------------
+// Below 35 energy, bad things start happening TO you — no choices, no dice you
+// can see. Probability climbs steeply with lateness and sleep debt: dead on
+// your feet at 2am, something going wrong is the expectation, not the risk.
+
+const MISHAPS = [
+  {
+    id: 'phone', once: true, weight: 8, cond: (s) => s.leadValue > 5000,
+    title: 'Where Is Your Phone',
+    apply(s) {
+      const lost = Math.round(s.leadValue * 0.25);
+      s.leadValue -= lost;
+      s.leads.forEach((l) => { l.value = Math.round(l.value * 0.75); l.valueText = money(l.value); });
+      s.joie = clamp(s.joie - 5, 0, 100);
+      return `Patting your pockets in slow motion changes nothing: your phone is gone, somewhere between the last two venues, with every number and half-written follow-up from this week inside it. You salvage what you can from LinkedIn, but ${money(lost)} of pipeline dies in a French gutter tonight.`;
+    },
+  },
+  {
+    id: 'nodoff', weight: 10,
+    title: 'You Just Fell Asleep. Standing Up.',
+    apply(s) {
+      s.network = clamp(s.network - 6, 0, 100);
+      return 'Mid-conversation, mid-sentence — possibly mid-word — your eyes close and your head does the thing. The Head of Partnerships you were talking to is now telling everyone. "He just… powered down," they say, doing the impression. The impression is accurate.';
+    },
+  },
+  {
+    id: 'tumble', weight: 10,
+    title: 'The Croisette Claims Another',
+    apply(s) {
+      s.energy = clamp(s.energy - 6, 0, 100);
+      s.joie = clamp(s.joie - 4, 0, 100);
+      s.brand = clamp(s.brand - 3, 0, 100);
+      return 'A kerb you have successfully navigated four times today defeats you completely. You go down in front of a beach club queue, lanyard over your face, to a small ironic cheer. At least three people were filming. One of them works in your industry. All of them have followers.';
+    },
+  },
+  {
+    id: 'wrongtext', once: true, weight: 8,
+    title: 'Wrong Chat. WRONG CHAT.',
+    apply(s) {
+      s.brand = clamp(s.brand - 6, 0, 100);
+      s.joie = clamp(s.joie - 3, 0, 100);
+      return 'Exhausted thumbs betray you: the message rating tonight’s prospects out of ten — composed for the group chat — lands in the channel with your CEO in it. You delete it in four seconds. Four seconds is an eternity. "?" replies your CEO, eleven minutes later, which is somehow worse than anything.';
+    },
+  },
+  {
+    id: 'cardchaos', weight: 9,
+    title: 'Card Declined. And Again.',
+    apply(s) {
+      s.spend += 300;
+      s.joie = clamp(s.joie - 3, 0, 100);
+      return 'Your card declines in front of people you were trying to impress — fraud lock, triggered by "irregular activity in Cannes", which, fair. By the time the emergency-cash machine, the replacement-card courier and the apologetic round you bought are done, the night of admin has cost you €300 and most of your remaining aura.';
+    },
+  },
+  {
+    id: 'lostbadge', once: true, weight: 6,
+    cond: (s) => s.hasPass,
+    title: 'The Lanyard Is Gone',
+    apply(s) {
+      s.spend += 350;
+      s.joie = clamp(s.joie - 2, 0, 100);
+      return 'Your badge — your laminated identity, your €4,000 neck decoration — is no longer on your neck. Frantic retracing fails. The registration desk reprints it in the morning for a €350 "replacement fee" and a look that says they know exactly what kind of night you had.';
+    },
+  },
+];
+
+// Returns {title, text} when something goes wrong, else null.
+export function rollMishap(s) {
+  if (s.over || s.energy >= 35) return null;
+  let p = ((35 - s.energy) / 35) * 0.15;
+  if (s.hour >= 26) p *= 3;
+  else if (s.hour >= 24) p *= 2.2;
+  else if (s.hour >= 22) p *= 1.5;
+  p += 0.02 * s.sleepDebt;
+  p = Math.min(0.65, p);
+  if (!chance(p)) return null;
+  const pool = MISHAPS.filter((m) =>
+    !(m.once && s.onceFired[`mishap:${m.id}`]) && (!m.cond || m.cond(s)));
+  if (!pool.length) return null;
+  const m = pickWeighted(pool);
+  if (m.once) s.onceFired[`mishap:${m.id}`] = true;
+  const text = m.apply(s);
+  addLog(s, `${m.title}: ${text}`, 'bad');
+  return { title: m.title, text };
 }
 
 export function resolveEncounter(s, enc, optionIdx) {

@@ -9,7 +9,7 @@ import { VENUES, VENUE_MAP } from '../js/data/venues.js';
 import {
   newTrip, travel, act, availableActions, rollEncounter, resolveEncounter,
   resolveBadgeScan, attemptConfidentWalk, startNight, finishNight, collapse,
-  checkClock, finalReport, DAY_END,
+  checkClock, finalReport, rollMishap, DAY_END,
 } from '../js/engine.js';
 
 function randomSpin() {
@@ -61,6 +61,7 @@ function playOne() {
     if (acts.length && chance(0.62)) {
       const { encounter } = act(s, pick(acts).key);
       handleEncounter(s, encounter);
+      rollMishap(s);
     } else {
       const open = VENUES.filter((v) =>
         v.key !== s.location && s.hour + 1 >= v.open[0] && s.hour + 1 <= Math.min(v.open[1], DAY_END - 1));
@@ -69,6 +70,7 @@ function playOne() {
       if (res.gate === 'badgeScan') { if (chance(0.7)) resolveBadgeScan(s); }
       else if (res.gate === 'noPass') { if (chance(0.4)) attemptConfidentWalk(s); }
       else if (res.ok) handleEncounter(s, rollEncounter(s));
+      rollMishap(s);
     }
   }
   if (guard >= 500) throw new Error('runaway game loop');

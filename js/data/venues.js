@@ -258,8 +258,8 @@ export const VENUES = [
             api.stat('network', 4); api.stat('joie', 3);
             return 'You breeze past the clipboard with a nod. Free smoothies, new friends, a panel you weren’t invited to speak on (you spoke).';
           }
-          api.stat('joie', -3);
-          return '"Sorry, this is a closed session for Wave 2 partners." You are not a Wave 2 partner. You back out through the towels.';
+          api.stat('joie', -3); api.stat('network', -2);
+          return '"Sorry, this is a closed session for Wave 2 partners." You are not a Wave 2 partner. You back out through the towels while the Wave 2 partners watch.';
         },
       },
     ],

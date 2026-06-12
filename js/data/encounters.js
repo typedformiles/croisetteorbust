@@ -480,7 +480,7 @@ export const ENCOUNTERS = [
           return 'Eleven minutes of actual human conversation. No agenda survives the Gutter Bar queue, and that’s precisely its magic. You part as genuine acquaintances.';
         },
       },
-      { label: 'Offer the bouncer €200 to jump the queue', cost: 200, run({ api, rng }) { api.spend(200); if (rng.chance(0.5)) { api.stat('network', 4); api.stat('joie', 3); return 'The rope opens. The CMO raises an eyebrow: "Efficient. I like efficient." She follows you in. Money CAN buy respect, in increments of two hundred.'; } api.stat('joie', -4); return 'The bouncer pockets the €200, looks through you like glass, and admits two interns instead. The CMO witnesses everything. The queue has rules, and you have learned them.'; } },
+      { label: 'Offer the bouncer €200 to jump the queue', cost: 200, run({ api, rng }) { api.spend(200); if (rng.chance(0.5)) { api.stat('network', 4); api.stat('joie', 3); return 'The rope opens. The CMO raises an eyebrow: "Efficient. I like efficient." She follows you in. Money CAN buy respect, in increments of two hundred.'; } api.stat('joie', -4); api.stat('network', -4); return 'The bouncer pockets the €200, looks through you like glass, and admits two interns instead. The CMO witnesses everything. The queue has rules, and you have learned them.'; } },
     ],
   },
   {

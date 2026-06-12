@@ -7,7 +7,7 @@ import { VENUE_MAP } from '../data/venues.js';
 import {
   cash, roiOf, dayInfo, isFinalDay, availableActions, act, travel, rollEncounter,
   resolveEncounter, resolveBadgeScan, attemptConfidentWalk, startNight,
-  finishNight, collapse, checkClock, addLog, DAY_END,
+  finishNight, collapse, checkClock, addLog, rollMishap, DAY_END,
 } from '../engine.js';
 
 export function tripScreen(root, s, { onEnd }) {
@@ -112,6 +112,17 @@ export function tripScreen(root, s, { onEnd }) {
     await modal({ kicker: enc.title, title: '…', body: `<p>${esc(text)}</p>`, options: [{ label: 'Continue' }], cls: 'outcome' });
   }
 
+  async function maybeMishap() {
+    const m = rollMishap(s);
+    if (!m) return;
+    render();
+    await modal({
+      kicker: 'RUNNING ON EMPTY', title: m.title,
+      body: `<p>${esc(m.text)}</p>`,
+      options: [{ label: 'Ugh.' }], cls: 'bad',
+    });
+  }
+
   async function postMove() {
     render();
     const c = checkClock(s);
@@ -168,6 +179,7 @@ export function tripScreen(root, s, { onEnd }) {
       render();
       await maybeEncounter(rollEncounter(s));
     }
+    await maybeMishap();
     await postMove();
     render();
     busy = false;
@@ -179,6 +191,7 @@ export function tripScreen(root, s, { onEnd }) {
     const { encounter } = act(s, action.key);
     render();
     await maybeEncounter(encounter);
+    await maybeMishap();
     await postMove();
     render();
     busy = false;
