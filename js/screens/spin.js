@@ -133,6 +133,7 @@ export function spinScreen(root, { onDone }) {
       onDone({
         budget: effectiveBudget(),
         par: results.budget.par,
+        company: results.budget.company,
         flight: results.budget.flight,
         arrivalIdx: results.arrival.value,
         departureIdx: results.departure.value,

@@ -12,7 +12,7 @@ export const DEPART_HOUR = 12;   // departure-day noon checkout
 export function newTrip(spin) {
   const s = {
     // fate
-    budget: spin.budget, par: spin.par,
+    budget: spin.budget, par: spin.par, company: spin.company,
     flight: spin.flight, respun: spin.respun,
     arrivalIdx: spin.arrivalIdx, departureIdx: spin.departureIdx,
     digs: spin.digs, digsInfo: spin.digsInfo, hasPass: spin.hasPass,

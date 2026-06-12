@@ -266,7 +266,8 @@ export function tripScreen(root, s, { onEnd }) {
     const d = dayInfo(s);
     await modal({
       kicker: `${d.name} ${d.date} · 3PM`, title: 'Bienvenue à Cannes',
-      body: `<p>You land via ${esc(s.flight.label)} and step into the Riviera heat. Home for the week: ${esc(s.digsInfo.name)}. ${esc(s.digsInfo.flavour)}</p>
+      body: `${s.company ? `<p><b>${esc(s.company)}</b></p>` : ''}
+             <p>You land via ${esc(s.flight.label)} and step into the Riviera heat. Home for the week: ${esc(s.digsInfo.name)}. ${esc(s.digsInfo.flavour)}</p>
              <p>${s.hasPass ? 'Your delegate badge swings proudly from your neck.' : 'You have no badge — the Palais is enemy territory. Everything else is fair game.'}
              The Croisette glitters. Pipeline awaits. ${money(cash(s))} to play with.</p>`,
       options: [{ label: 'Let’s build some ROI' }],
