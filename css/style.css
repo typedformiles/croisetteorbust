@@ -93,6 +93,26 @@ a { color: var(--azure-dark); }
 .title-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
 .credit { font-size: 12px; color: #7A6F5C; margin-top: 18px; }
 
+.brand-lockup {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin-top: 20px; padding: 10px 18px;
+  border-top: 2px dashed #D9CBAA;
+  text-decoration: none;
+}
+.brand-lockup canvas {
+  width: 44px; height: 44px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 8px rgba(126, 12, 247, 0.45));
+}
+.brand-words { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+.brand-by { font-size: 11px; color: #7A6F5C; }
+.brand-name {
+  font-family: 'Press Start 2P', monospace; font-size: 13px;
+  color: #7E0CF7; text-shadow: 0 0 12px rgba(126, 12, 247, 0.35);
+  letter-spacing: 1px;
+}
+.brand-lockup:hover .brand-name { text-shadow: 0 0 16px rgba(126, 12, 247, 0.6); }
+
 /* ---------- spin screen ---------- */
 
 .spin-screen { padding-top: 8px; }

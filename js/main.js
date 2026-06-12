@@ -20,12 +20,45 @@ function showTitle() {
           <button class="btn big gold" id="btn-play">PLAY</button>
           <button class="btn ghost" id="btn-how">HOW IT WORKS</button>
         </div>
-        <footer class="credit">a silly game by <a href="https://neuralift.ai" target="_blank" rel="noopener">neuralift.ai</a></footer>
+        <a class="brand-lockup" href="https://neuralift.ai" target="_blank" rel="noopener">
+          <canvas id="nl-pixel-icon" width="64" height="64" aria-hidden="true"></canvas>
+          <span class="brand-words">
+            <span class="brand-by">a silly game by</span>
+            <span class="brand-name">NEURALIFT.AI</span>
+          </span>
+        </a>
       </div>
     </div>`;
   renderMap(document.getElementById('title-map'));
+  drawPixelLogo(document.getElementById('nl-pixel-icon'));
   document.getElementById('btn-play').addEventListener('click', showSpin);
   document.getElementById('btn-how').addEventListener('click', showHow);
+}
+
+// Downsample the real Neuralift logo into chunky pixels (same trick as liftgames).
+function drawPixelLogo(canvas) {
+  if (!canvas) return;
+  const img = new Image();
+  img.onload = () => {
+    const grid = 16;
+    const tmp = document.createElement('canvas');
+    tmp.width = grid; tmp.height = grid;
+    const tctx = tmp.getContext('2d');
+    tctx.drawImage(img, 0, 0, grid, grid);
+    const data = tctx.getImageData(0, 0, grid, grid).data;
+    const ctx = canvas.getContext('2d');
+    const px = canvas.width / grid;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let y = 0; y < grid; y++) {
+      for (let x = 0; x < grid; x++) {
+        const i = (y * grid + x) * 4;
+        if (data[i + 3] < 80) continue;
+        ctx.fillStyle = `rgb(${data[i]},${data[i + 1]},${data[i + 2]})`;
+        ctx.fillRect(x * px, y * px, px, px);
+      }
+    }
+  };
+  img.src = 'assets/neuralift-icon.png';
 }
 
 async function showHow() {
