@@ -19,7 +19,7 @@ export const BUDGET_REEL = [
   { value: 750_000, par: 16,  label: '$750k',  weight: 8,
     flavour: 'New CEO wants to "make some noise". You are the noise.',
     flight: { cost: 31_000, label: 'first class. The pyjamas are yours to keep' } },
-  { value: 2_500_000, par: 7, label: '$2.5M', weight: 5, jackpot: true,
+  { value: 2_500_000, par: 2, label: '$2.5M', weight: 5, jackpot: true,
     flavour: 'The board saw a competitor’s yacht on LinkedIn. Go fix it.',
     flight: { cost: 180_000, label: 'a private jet out of Farnborough' } },
 ];
@@ -75,6 +75,16 @@ export const DIGS_REEL = [
     perks: 'Extra hour daily, and Yacht Row treats you like one of their own.',
     startHour: 8, status: true },
 ];
+
+// The $2.5M jackpot comes with a $500k yacht charter pre-charged — the DIGS
+// reel is overridden and your home for the week IS Yacht Row.
+export const OWN_YACHT_DIGS = {
+  value: 'ownyacht', label: 'YOUR YACHT', charter: 500_000,
+  name: 'your own 40-metre charter on the jetée',
+  flavour: 'The board pre-approved a $500k yacht charter. "Optics," they said. It has a crew, a hot tub, and YOUR name on the welcome screen.',
+  perks: 'Your home IS Yacht Row: extra hour daily, instant status, and you do the hosting now.',
+  startHour: 8, status: true, sleepBonus: true,
+};
 
 export const PASS_REEL = [
   { value: true, label: 'FESTIVAL PASS', weight: 55,

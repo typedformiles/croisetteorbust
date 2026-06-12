@@ -4,7 +4,7 @@ import { pickWeighted, money, esc } from '../util.js';
 import { confetti } from '../ui.js';
 import {
   BUDGET_REEL, ARRIVAL_REEL, DEPARTURE_REEL, DIGS_REEL, PASS_REEL,
-  TRIP_DAYS, RESPIN_PENALTY,
+  OWN_YACHT_DIGS, TRIP_DAYS, RESPIN_PENALTY,
 } from '../data/spin.js';
 
 const REELS = [
@@ -72,11 +72,13 @@ export function spinScreen(root, { onDone }) {
     pull.disabled = true;
     pull.textContent = 'FATE IS DECIDING…';
 
+    const budget = pickWeighted(BUDGET_REEL);
     results = {
-      budget: pickWeighted(BUDGET_REEL),
+      budget,
       arrival: pickWeighted(ARRIVAL_REEL),
       departure: pickWeighted(DEPARTURE_REEL),
-      digs: pickWeighted(DIGS_REEL),
+      // jackpot overrides digs: the board already chartered your yacht
+      digs: budget.jackpot ? OWN_YACHT_DIGS : pickWeighted(DIGS_REEL),
       pass: pickWeighted(PASS_REEL),
     };
 
@@ -113,7 +115,7 @@ export function spinScreen(root, { onDone }) {
           <div><b>${esc(results.digs.label)}</b><span>${esc(results.digs.perks)}</span></div>
           <div><b>${results.pass.value ? 'FESTIVAL PASS' : 'NO BADGE'}</b><span>${results.pass.value ? 'the Palais is yours' : 'the Palais is not yours'}</span></div>
         </div>
-        <p class="fate-flight">✈ Travel desk has booked you ${esc(results.budget.flight.label)} — ${money(results.budget.flight.cost)}, already off your budget. Non-negotiable.</p>
+        <p class="fate-flight">✈ Travel desk has booked you ${esc(results.budget.flight.label)} — ${money(results.budget.flight.cost)}, already off your budget. Non-negotiable.${results.digs.charter ? ` 🛥 Plus the yacht charter: ${money(results.digs.charter)}, pre-paid by the board. Also non-negotiable. Gloriously so.` : ''}</p>
         <div class="fate-actions">
           ${!respun ? `<button class="btn ghost" id="respin">APPEAL TO FINANCE<small>full re-spin, −10% of whatever budget lands</small></button>` : ''}
           <button class="btn big gold" id="go">PACK YOUR BAGS →</button>

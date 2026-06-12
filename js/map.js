@@ -27,6 +27,7 @@ const DIGS_POS = {
   villa:   [26, 47],
   hotel:   [236, 104],
   yacht:   [116, 188],
+  ownyacht: [116, 188],
 };
 
 let P = [];

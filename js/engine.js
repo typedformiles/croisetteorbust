@@ -18,7 +18,8 @@ export function newTrip(spin) {
     digs: spin.digs, digsInfo: spin.digsInfo, hasPass: spin.hasPass,
     // wallet & pipeline. Casino winnings land in `winnings`: they extend your
     // cash but never shrink `spend` — you can't gamble your ROI clean.
-    spend: spin.flight.cost, winnings: 0, drinkSpend: 0, gambleNet: 0, leadValue: 0, leads: [],
+    spend: spin.flight.cost + (spin.digsInfo.charter || 0),
+    winnings: 0, drinkSpend: 0, gambleNet: 0, leadValue: 0, leads: [],
     // meters
     brand: 5, network: 5, joie: 20, energy: 80, sleepDebt: 0,
     // clock & place
@@ -104,7 +105,7 @@ export function travel(s, key) {
     }
   }
   if (key === 'yachtrow') {
-    const aboard = s.digs === 'yacht' || s.network >= 40 || chance(0.45);
+    const aboard = s.digs === 'yacht' || s.digs === 'ownyacht' || s.network >= 40 || chance(0.45);
     if (!aboard) {
       s.location = 'stroll';
       s.joie = clamp(s.joie - 2, 0, 100);
@@ -176,7 +177,7 @@ function expireSneak(s) {
 export function availableActions(s) {
   const v = VENUE_MAP[s.location];
   if (!v) return [];
-  return v.actions.map((a) => {
+  return v.actions.filter((a) => !a.cond || a.cond(s)).map((a) => {
     const open = a.open ?? v.open;
     const hourOk = s.hour >= open[0] && s.hour <= Math.min(open[1], DAY_END - 1);
     const cashOk = cash(s) >= (a.cost || 0);

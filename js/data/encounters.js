@@ -539,7 +539,7 @@ export const ENCOUNTERS = [
   },
   {
     id: 'taxisurge', tone: 'bad', weight: 9, when: [25, 27],
-    cond: (s) => s.digs !== 'hotel' && s.digs !== 'yacht',
+    cond: (s) => s.digs !== 'hotel' && s.digs !== 'yacht' && s.digs !== 'ownyacht',
     title: 'Surge Pricing',
     text: 'It’s deep into the night and the taxi app is showing a price with its own gravitational field: €290 for a journey you could almost throw a croissant along. The little car icons circle like sharks.',
     options: [

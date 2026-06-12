@@ -93,7 +93,22 @@ export const VENUES = [
         },
       },
       {
+        key: 'hostdeck', label: 'Hold court aboard YOUR yacht', cost: 2_000,
+        cond: (s) => s.digs === 'ownyacht',
+        desc: 'You own the gangway now. Let them come to you.',
+        run({ api, rng }) {
+          const a = api.lead(110_000);
+          api.stat('network', 3); api.stat('joie', 3);
+          if (rng.chance(0.6)) {
+            const b = api.lead(95_000);
+            return `Crew pouring, flag flying, YOUR name on the stern. The ${a.name} (${a.valueText}) and the ${b.name} (${b.valueText}) both take meetings they'd never have taken on land. The $500k starts paying rent.`;
+          }
+          return `Holding court from your own aft deck does something to people. The ${a.name} signs up for a proposal — ${a.valueText} — mostly, you suspect, to be seen aboard.`;
+        },
+      },
+      {
         key: 'charter', label: 'Charter a yacht for a client day', cost: 45_000,
+        cond: (s) => s.digs !== 'ownyacht',
         desc: 'Stop borrowing boats. Become the boat.',
         run({ api }) {
           const a = api.lead(140_000); const b = api.lead(140_000); const c = api.lead(110_000);

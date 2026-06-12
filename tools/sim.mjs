@@ -4,6 +4,7 @@
 import { pickWeighted, pick, chance } from '../js/util.js';
 import {
   BUDGET_REEL, ARRIVAL_REEL, DEPARTURE_REEL, DIGS_REEL, PASS_REEL,
+  OWN_YACHT_DIGS,
 } from '../js/data/spin.js';
 import { VENUES, VENUE_MAP } from '../js/data/venues.js';
 import {
@@ -14,7 +15,7 @@ import {
 
 function randomSpin() {
   const b = pickWeighted(BUDGET_REEL);
-  const digs = pickWeighted(DIGS_REEL);
+  const digs = b.jackpot ? OWN_YACHT_DIGS : pickWeighted(DIGS_REEL);
   return {
     budget: b.value, par: b.par, flight: b.flight,
     arrivalIdx: pickWeighted(ARRIVAL_REEL).value,
