@@ -3,34 +3,37 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@500;700&family=Fraunces:opsz,wght@9..144,900&display=swap" rel="stylesheet">
   <style>
     html, body { margin: 0; padding: 0; overflow: hidden; }
-    .stage { position: relative; width: 1200px; height: 630px; overflow: hidden; background: #9FE0DC; }
-    .stage #map svg { position: absolute; top: -90px; left: -30px; width: 1280px; height: auto; display: block; }
-    .stage #map .hotspot, .stage #map #player, .stage #map .digs-marker, .stage #map .sponsor-spot { display: none; }
+    .stage {
+      position: relative; width: 1200px; height: 630px; overflow: hidden;
+      background-image: url('../assets/map-board.webp');
+      background-size: cover; background-position: center 38%;
+    }
     .overlay {
       position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 22px;
-      background: radial-gradient(ellipse at center, rgba(255,251,241,0.30) 0%, rgba(39,49,74,0.18) 100%);
+      align-items: center; justify-content: center; gap: 20px;
+      background: radial-gradient(ellipse at center, rgba(255,251,241,0.18) 0%, rgba(39,49,74,0.28) 100%);
     }
     .card {
-      background: rgba(255, 251, 241, 0.96); border: 5px solid #27314A; border-radius: 6px;
-      box-shadow: 12px 12px 0 rgba(39,49,74,0.55); padding: 52px 78px; text-align: center;
+      background: rgba(255, 251, 241, 0.96);
+      border-top: 4px solid #C9A95C; border-bottom: 4px solid #C9A95C;
+      box-shadow: 0 18px 50px rgba(39,49,74,0.4); padding: 40px 80px; text-align: center;
     }
-    h1 { font-family: 'Press Start 2P', monospace; font-size: 52px; line-height: 1.35; margin: 0 0 26px;
-         color: #E2725B; text-shadow: 4px 4px 0 rgba(39,49,74,0.18); }
+    h1 { font-family: 'Press Start 2P', monospace; font-size: 50px; line-height: 1.35; margin: 0 0 22px;
+         color: #E2725B; text-shadow: 4px 4px 0 rgba(39,49,74,0.15); }
     h1 span { color: #20748A; }
-    .tag { font-family: 'Space Grotesk', sans-serif; font-size: 27px; font-weight: 500; color: #27314A; margin: 0 0 30px; }
-    .cta { font-family: 'Press Start 2P', monospace; font-size: 17px; color: #FFFBF1; background: #D8A24A;
-           border: 3px solid #27314A; box-shadow: 0 6px 0 #27314A; display: inline-block; padding: 18px 30px; color: #27314A; }
-    .brand { font-family: 'Press Start 2P', monospace; font-size: 14px; color: #7E0CF7; margin-top: 30px; }
-    .croissant { font-size: 44px; position: absolute; top: 30px; right: 44px; transform: rotate(12deg); }
+    .tag { font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: 30px; color: #27314A; margin: 0 0 26px; }
+    .cta { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: 1px;
+           color: #27314A; background: #D8A24A; border-radius: 8px;
+           box-shadow: 0 5px 0 #27314A; display: inline-block; padding: 16px 28px; }
+    .brand { font-family: 'Press Start 2P', monospace; font-size: 13px; color: #7E0CF7; margin-top: 26px; }
+    .croissant { font-size: 44px; position: absolute; top: 28px; right: 44px; transform: rotate(12deg); }
   </style>
 </head>
 <body>
   <div class="stage">
-    <div id="map"></div>
     <div class="overlay">
       <div class="card">
         <div class="croissant">🥐</div>
@@ -41,9 +44,5 @@
       </div>
     </div>
   </div>
-  <script type="module">
-    import { renderMap } from '../js/map.js';
-    renderMap(document.getElementById('map'));
-  </script>
 </body>
 </html>

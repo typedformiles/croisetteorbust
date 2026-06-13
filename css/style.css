@@ -118,68 +118,40 @@ a { color: var(--azure-dark); }
 .spin-screen { padding-top: 8px; }
 .spin-head { text-align: center; margin-bottom: 18px; }
 .spin-head h2 {
-  font-family: 'Bebas Neue', sans-serif; font-size: clamp(30px, 6vw, 52px);
-  letter-spacing: 3px; line-height: 1; margin: 14px 0 8px;
-  color: #c99a3a;
-  background: linear-gradient(180deg, #f4d98a 0%, #c99a3a 55%, #9a6f24 100%);
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  text-shadow: 0 2px 0 rgba(39,49,74,0.18);
+  font-family: 'Fraunces', Georgia, serif; font-weight: 900;
+  font-size: clamp(28px, 5.5vw, 48px); letter-spacing: 0; line-height: 1.05;
+  margin: 14px 0 8px; color: var(--ink);
 }
-.spin-sub { color: #6B5F4C; margin: 0; font-style: italic; }
+.spin-sub { color: #9a8c70; margin: 0; font-style: italic; }
 
-/* The slot machine: brass cabinet housing five reel drums. */
+/* Editorial layout: serif values on cream, separated by gold hairlines */
 .reels {
   display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0;
-  margin-bottom: 22px; padding: 20px 14px 22px;
-  background:
-    linear-gradient(180deg, #1c2742 0%, #232f4d 100%);
-  border-radius: 14px;
-  border: 4px solid transparent;
-  background-clip: padding-box;
-  box-shadow:
-    0 0 0 4px #8a6a2e,                         /* brass outer */
-    0 0 0 6px #d9b25e,                          /* gold highlight */
-    0 0 0 9px #8a6a2e,                          /* brass inner */
-    0 18px 40px rgba(39, 49, 74, 0.4);
-  position: relative;
+  margin-bottom: 22px; padding: 12px 0 2px;
+  border-top: 2px solid #C9A95C; border-bottom: 2px solid #C9A95C;
 }
-/* deco corner studs */
-.reels::before, .reels::after {
-  content: ''; position: absolute; left: 14px; right: 14px; height: 2px;
-  background: linear-gradient(90deg, transparent, #d9b25e 20%, #f4d98a 50%, #d9b25e 80%, transparent);
-}
-.reels::before { top: 8px; }
-.reels::after { bottom: 9px; }
 .reel {
-  min-width: 0; padding: 4px 9px; text-align: center;
+  min-width: 0; padding: 18px 10px 22px; text-align: center;
   display: flex; flex-direction: column;
-  border-left: 1px solid rgba(217, 178, 94, 0.22);
+  border-left: 1px solid rgba(201, 169, 92, 0.45);
 }
 .reel:first-child { border-left: 0; }
 .reel-title {
-  font-family: 'Bebas Neue', sans-serif; font-size: 16px;
-  letter-spacing: 2.5px; color: #e7c879; margin-bottom: 8px; line-height: 1;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 11px;
+  letter-spacing: 3px; color: #B8924A; margin-bottom: 14px; text-transform: uppercase;
 }
 .reel-window {
-  position: relative; overflow: hidden;
-  background: linear-gradient(180deg, #fbf4e3 0%, #fffdf8 48%, #fbf4e3 100%);
-  border-radius: 7px; color: #1c2742;
-  font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: 23px;
-  min-height: 62px; display: flex; align-items: center; justify-content: center;
-  padding: 8px 5px; word-break: break-word; line-height: 1.15;
-  box-shadow: 0 0 0 2px #b88f3e, inset 0 0 0 4px #fffdf8;
-}
-/* cylinder shading — drum curvature top & bottom */
-.reel-window::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 7px;
-  background: linear-gradient(180deg, rgba(28,39,66,0.22) 0%, transparent 26%, transparent 74%, rgba(28,39,66,0.22) 100%);
+  color: var(--ink);
+  font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: clamp(19px, 2.2vw, 26px);
+  display: flex; align-items: center; justify-content: center;
+  word-break: break-word; line-height: 1.1;
 }
 .reel-value { position: relative; }
-.reel.spinning .reel-window { animation: shake 0.1s infinite; }
-.reel.spinning .reel-value { filter: blur(0.4px); opacity: 0.85; }
-.reel.landed .reel-window { box-shadow: 0 0 0 2px #e7c879, 0 0 14px rgba(231,200,121,0.5), inset 0 0 0 4px #fffdf8; }
-.reel.jackpot .reel-window { color: #b23d28; box-shadow: 0 0 0 2px #E2725B, 0 0 20px rgba(226,114,91,0.7), inset 0 0 0 4px #fff7ef; animation: pulse 0.7s 3; }
-.reel-flavour { font-size: 12.5px; line-height: 1.45; color: #cdbfa0; margin-top: 9px; font-style: italic; }
+.reel.spinning .reel-value { filter: blur(0.5px); opacity: 0.8; }
+.reel.landed .reel-value { animation: reel-land 0.3s ease-out; }
+.reel.jackpot .reel-window { color: var(--terracotta-dark); }
+@keyframes reel-land { 0% { transform: translateY(-6px); opacity: 0.4; } 100% { transform: none; opacity: 1; } }
+.reel-flavour { font-size: 12px; line-height: 1.5; color: #9a8c70; margin-top: 14px; }
 
 @keyframes shake { 0% { transform: translateY(-1px); } 50% { transform: translateY(1px); } 100% { transform: translateY(-1px); } }
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
@@ -187,15 +159,14 @@ a { color: var(--azure-dark); }
 .spin-controls { text-align: center; margin-bottom: 22px; }
 
 .fate-card {
-  background: linear-gradient(180deg, #fffdf8 0%, #fbf4e3 100%);
-  border-radius: 14px;
-  box-shadow: 0 0 0 3px #d9b25e, 0 0 0 6px #8a6a2e, 0 16px 36px rgba(39, 49, 74, 0.28);
-  padding: 28px 26px; max-width: 720px; margin: 0 auto 30px;
+  background: none; border-top: 2px solid #C9A95C; border-bottom: 2px solid #C9A95C;
+  padding: 26px 16px; max-width: 720px; margin: 0 auto 30px;
 }
-.fate-kicker { font-family: 'Bebas Neue', sans-serif; letter-spacing: 3px; font-size: 17px; color: #b88f3e; margin-bottom: 18px; text-align: center; }
-.fate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
-.fate-grid div { background: #fffdf8; border: 1px solid rgba(184,143,62,0.35); border-radius: 10px; padding: 14px; }
-.fate-grid b { display: block; font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: 21px; margin-bottom: 5px; color: var(--terracotta-dark); line-height: 1.1; }
+.fate-kicker { font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 3px; font-size: 11px; color: #B8924A; margin-bottom: 18px; text-align: center; text-transform: uppercase; }
+.fate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 16px; }
+.fate-grid div { background: none; border-left: 1px solid rgba(201,169,92,0.45); border-radius: 0; padding: 12px 16px; }
+.fate-grid div:nth-child(odd) { border-left: 0; }
+.fate-grid b { display: block; font-family: 'Fraunces', Georgia, serif; font-weight: 900; font-size: 21px; margin-bottom: 5px; color: var(--ink); line-height: 1.1; }
 .fate-grid span { font-size: 13px; color: #6B5F4C; }
 .fate-flight { font-size: 13.5px; color: #6B5F4C; border-top: 2px dashed #D9CBAA; padding-top: 12px; }
 .fate-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
@@ -268,12 +239,10 @@ a { color: var(--azure-dark); }
   padding: clamp(5px, 1.2%, 11px) clamp(9px, 1.8%, 16px); cursor: pointer;
   display: flex; flex-direction: column; gap: 3px; align-items: center;
   box-shadow: 0 4px 12px rgba(39,49,74,0.3);
-  animation: sp-pulse 2.2s ease-in-out infinite;
 }
-.sponsor-spot:hover { animation: none; }
+.sponsor-spot:hover { filter: brightness(1.08); }
 .sponsor-spot .sp-label { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.9vw, 17px); color: #FFE49A; white-space: nowrap; }
 .sponsor-spot .sp-sub { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(8px, 1.5vw, 14px); color: #FFFBF1; white-space: nowrap; }
-@keyframes sp-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 .title-map .sponsor-spot { display: none; }
 
 /* player beacon */
