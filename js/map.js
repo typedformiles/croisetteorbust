@@ -1,97 +1,88 @@
-// The Croisette board — an illustrated map of Cannes used as the game surface,
-// with invisible tap-targets, per-venue state dots and the player beacon
-// overlaid in the image's own pixel space (1280×853).
+// The Croisette board — an illustrated map of Cannes used as the game surface.
+// Hotspots, beacon, sponsor badge and digs marker are plain HTML elements
+// positioned with percentage left/top inside the background-image container,
+// so a point at (x/1280, y/853) always lands on the same spot of the picture
+// regardless of screen size. One coordinate set covers every device.
 
 import { VENUES } from './data/venues.js';
 
 const W = 1280, H = 853;
+const pctX = (x) => (x / W * 100).toFixed(3) + '%';
+const pctY = (y) => (y / H * 100).toFixed(3) + '%';
 
-// Venue key → [x, y] anchor on the illustrated board, sat on the building
-// itself (the label is part of the art).
+// Venue key → [x, y] on the 1280×853 board, sat on the label/building.
 export const VENUE_POS = {
-  oldtown:   [110, 92],
-  cafferoma: [250, 168],
-  manolans:  [605, 180],
-  casino:    [740, 168],
-  palais:    [110, 232],
-  cabanas:   [565, 268],
-  carlton:   [810, 318],
-  martinez:  [1110, 368],
-  gutter:    [830, 438],
-  yachtrow:  [170, 368],
-  stroll:    [665, 490],
+  oldtown:   [131, 146],
+  cafferoma: [407, 291],
+  manolans:  [608, 251],
+  casino:    [798, 222],
+  palais:    [174, 433],
+  cabanas:   [567, 470],
+  carlton:   [875, 431],
+  martinez:  [1171, 545],
+  gutter:    [960, 631],
+  yachtrow:  [237, 676],
+  stroll:    [684, 687],
 };
 
 // Where "home" sits for each digs choice (small marker).
 const DIGS_POS = {
-  antibes:  [1210, 250],
-  carnot:   [470, 430],
-  villa:    [1080, 150],
-  hotel:    [780, 470],
-  yacht:    [230, 650],
-  ownyacht: [230, 650],
+  antibes:  [1200, 470],
+  carnot:   [560, 560],
+  villa:    [1080, 175],
+  hotel:    [900, 520],
+  yacht:    [300, 720],
+  ownyacht: [300, 720],
 };
 
 // The empty Vallauris / Super-Cannes hills — sponsor real estate.
-const SPONSOR_POS = [1055, 140];
+const SPONSOR_POS = [870, 165];
 
-function hotspotGroup(v) {
+function hotspotEl(v) {
   const [x, y] = VENUE_POS[v.key];
   return `
-  <g class="hotspot" data-venue="${v.key}" transform="translate(${x},${y})">
-    <circle class="hit" r="74"></circle>
-    <circle class="state-dot" r="15" cx="0" cy="0"></circle>
-    <text class="closed-ico" y="7" text-anchor="middle">🌙</text>
-  </g>`;
+  <button class="hotspot" type="button" data-venue="${v.key}"
+          style="left:${pctX(x)};top:${pctY(y)}">
+    <span class="state-dot"></span>
+    <span class="closed-ico" aria-hidden="true">🌙</span>
+    <span class="hs-name">${v.mapLabel}</span>
+  </button>`;
 }
 
 export function renderMap(container) {
-  const hotspots = VENUES.map(hotspotGroup).join('');
-  // The board image is a CSS background on a container locked to its aspect
-  // ratio; the overlay SVG uses preserveAspectRatio="none" so it stretches to
-  // exactly the same box — coordinate (x,y) maps 1:1 to the image with no
-  // letterbox drift (the bug with an embedded <image> + viewBox).
+  const hotspots = VENUES.map(hotspotEl).join('');
   container.innerHTML = `
   <div class="board" style="background-image:url('assets/map-board.webp')">
-  <svg id="mapsvg" class="board-overlay" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Illustrated map of Cannes">
-    <g class="digs-marker" hidden>
-      <circle class="dm-glow" r="20"></circle>
-      <circle class="dm-core" r="9"></circle>
-      <text class="dm-label" y="4" text-anchor="middle">⌂</text>
-    </g>
     ${hotspots}
-    <g class="sponsor-spot" transform="translate(${SPONSOR_POS[0]},${SPONSOR_POS[1]})">
-      <rect class="hit" x="-170" y="-66" width="340" height="132" rx="14"></rect>
-      <g class="sp-badge">
-        <rect class="sp-bg" x="-168" y="-56" width="336" height="112" rx="16"></rect>
-        <text class="sp-label" y="-12" text-anchor="middle">YOUR BRAND HERE</text>
-        <text class="sp-sub" y="30" text-anchor="middle">▸ tap to sponsor the hills</text>
-      </g>
-    </g>
-    <g id="player">
-      <circle class="p-glow" r="34"></circle>
-      <circle class="p-ring" r="22"></circle>
-      <circle class="p-core" r="12"></circle>
-    </g>
-  </svg>
+    <button class="sponsor-spot" type="button">
+      <span class="sp-label">YOUR BRAND HERE</span>
+      <span class="sp-sub">▸ tap to sponsor the hills</span>
+    </button>
+    <div class="digs-marker" hidden>
+      <span class="dm-core">⌂</span>
+    </div>
+    <div id="player"><span class="p-glow"></span><span class="p-ring"></span><span class="p-core"></span></div>
   </div>`;
 }
 
 export function updateMap(s, DAY_END) {
-  const svg = document.getElementById('mapsvg');
-  if (!svg) return;
-  const pos = VENUE_POS[s.location] || VENUE_POS.stroll;
-  const player = svg.querySelector('#player');
-  player.setAttribute('transform', `translate(${pos[0]},${pos[1]})`);
+  const board = document.querySelector('.board');
+  if (!board) return;
 
-  const dm = svg.querySelector('.digs-marker');
+  const [px, py] = VENUE_POS[s.location] || VENUE_POS.stroll;
+  const player = board.querySelector('#player');
+  player.style.left = pctX(px);
+  player.style.top = pctY(py);
+
+  const dm = board.querySelector('.digs-marker');
   const dp = DIGS_POS[s.digs];
   if (dp) {
-    dm.removeAttribute('hidden');
-    dm.setAttribute('transform', `translate(${dp[0]},${dp[1]})`);
+    dm.hidden = false;
+    dm.style.left = pctX(dp[0]);
+    dm.style.top = pctY(dp[1]);
   }
 
-  for (const g of svg.querySelectorAll('.hotspot')) {
+  for (const g of board.querySelectorAll('.hotspot')) {
     const key = g.dataset.venue;
     const v = VENUES.find((x) => x.key === key);
     const open = s.hour >= v.open[0] && s.hour <= Math.min(v.open[1], DAY_END - 1);

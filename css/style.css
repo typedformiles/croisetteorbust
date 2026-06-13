@@ -79,7 +79,6 @@ a { color: var(--azure-dark); }
   border-radius: 4px; box-shadow: 8px 8px 0 rgba(39, 49, 74, 0.18);
 }
 .title-map .board { width: 100%; height: 100%; aspect-ratio: auto; background-size: cover; }
-.title-map .board-overlay { display: none; }
 .title-map .hotspot, .title-map #player, .title-map .digs-marker { display: none; }
 .title-overlay {
   position: relative; z-index: 2; margin: auto; text-align: center;
@@ -204,45 +203,70 @@ a { color: var(--azure-dark); }
   border: 3px solid rgba(39, 49, 74, 0.25); border-radius: 16px; overflow: hidden;
   box-shadow: 0 14px 30px rgba(39, 49, 74, 0.22); background: #BFE3DF; line-height: 0;
 }
-/* the illustrated board: image as background, SVG overlay stretched to match */
+/* the illustrated board: image as background, HTML elements positioned with
+   percentage left/top so they always land on the same point of the picture */
 .board {
   position: relative; width: 100%; aspect-ratio: 1280 / 853;
   background-size: 100% 100%; background-position: center; background-repeat: no-repeat;
-  line-height: 0;
 }
-.board-overlay { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-/* map interactivity — overlaid on the illustrated board */
-.hotspot { cursor: pointer; }
-.hotspot .hit { fill: transparent; }
-.hotspot .state-dot { fill: transparent; transition: fill 0.2s; }
-.hotspot .closed-ico { font-size: 22px; display: none; }
-.hotspot:hover .state-dot { fill: rgba(255, 209, 102, 0.45); stroke: #FFFBF1; stroke-width: 3; }
-.hotspot.closed .state-dot { fill: rgba(39, 49, 74, 0.4); }
+/* hotspots — percentage-positioned circular tap targets */
+.hotspot {
+  position: absolute; transform: translate(-50%, -50%);
+  width: clamp(46px, 12%, 96px); aspect-ratio: 1; border-radius: 50%;
+  border: 0; background: transparent; padding: 0; margin: 0; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.hotspot .hs-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } /* sr-only */
+.hotspot .state-dot {
+  width: 36%; aspect-ratio: 1; border-radius: 50%; background: transparent; transition: background 0.15s, box-shadow 0.15s;
+}
+.hotspot:hover .state-dot { background: rgba(255, 209, 102, 0.5); box-shadow: 0 0 0 3px rgba(255,251,241,0.8); }
+.hotspot .closed-ico { position: absolute; display: none; font-size: clamp(13px, 3vw, 22px); line-height: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
+.hotspot.closed .state-dot { background: rgba(39, 49, 74, 0.45); }
 .hotspot.closed .closed-ico { display: block; }
-.hotspot.closed:hover .state-dot { fill: rgba(39, 49, 74, 0.4); }
-.hotspot.locked .state-dot { fill: rgba(120, 120, 120, 0.5); }
+.hotspot.locked .state-dot { background: rgba(120, 120, 120, 0.55); }
 
-.sponsor-spot { cursor: pointer; }
-.sponsor-spot .hit { fill: transparent; }
-.sponsor-spot .sp-bg { fill: rgba(126, 12, 247, 0.94); stroke: #FFE49A; stroke-width: 4; }
-.sponsor-spot .sp-label { font-family: 'Press Start 2P', monospace; font-size: 19px; fill: #FFE49A; }
-.sponsor-spot .sp-sub { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; fill: #FFFBF1; }
-.sponsor-spot .sp-badge { animation: sp-pulse 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-.sponsor-spot:hover .sp-badge { animation: none; }
-@keyframes sp-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+/* sponsor badge — anchored into the top-right hills so it never clips */
+.sponsor-spot {
+  position: absolute; top: 5%; right: clamp(8px, 2%, 20px); transform-origin: top right;
+  background: rgba(126, 12, 247, 0.94); border: 3px solid #FFE49A; border-radius: 14px;
+  padding: clamp(5px, 1.2%, 11px) clamp(9px, 1.8%, 16px); cursor: pointer;
+  display: flex; flex-direction: column; gap: 3px; align-items: center;
+  box-shadow: 0 4px 12px rgba(39,49,74,0.3);
+  animation: sp-pulse 2.2s ease-in-out infinite;
+}
+.sponsor-spot:hover { animation: none; }
+.sponsor-spot .sp-label { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.9vw, 17px); color: #FFE49A; white-space: nowrap; }
+.sponsor-spot .sp-sub { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(8px, 1.5vw, 14px); color: #FFFBF1; white-space: nowrap; }
+@keyframes sp-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 .title-map .sponsor-spot { display: none; }
 
-#player { transition: transform 0.45s ease; pointer-events: none; }
-#player .p-core { fill: #FF3D7F; stroke: #FFFBF1; stroke-width: 5; }
-#player .p-ring { fill: none; stroke: #FF3D7F; stroke-width: 6; animation: ping 1.6s ease-out infinite; }
-#player .p-glow { fill: #FF3D7F; opacity: 0.22; animation: glowpulse 1.6s ease-in-out infinite; }
-@keyframes ping { 0% { r: 14; opacity: 0.95; } 75% { r: 46; opacity: 0; } 100% { r: 46; opacity: 0; } }
-@keyframes glowpulse { 0%, 100% { opacity: 0.14; } 50% { opacity: 0.34; } }
-.digs-marker { pointer-events: none; }
-.digs-marker .dm-glow { fill: #2E93A8; opacity: 0.25; }
-.digs-marker .dm-core { fill: #FFFBF1; stroke: #20748A; stroke-width: 3; }
-.digs-marker .dm-label { font-size: 13px; fill: #20748A; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+/* player beacon */
+#player {
+  position: absolute; transform: translate(-50%, -50%); pointer-events: none;
+  width: clamp(26px, 6%, 54px); aspect-ratio: 1;
+  transition: left 0.45s ease, top 0.45s ease;
+}
+#player span { position: absolute; top: 50%; left: 50%; border-radius: 50%; }
+#player .p-core { width: 42%; height: 42%; transform: translate(-50%, -50%); background: #FF3D7F; border: 3px solid #FFFBF1; box-sizing: border-box; }
+#player .p-ring { width: 42%; height: 42%; border: 3px solid #FF3D7F; box-sizing: border-box; animation: ping 1.6s ease-out infinite; }
+#player .p-glow { width: 92%; height: 92%; transform: translate(-50%, -50%); background: #FF3D7F; opacity: 0.2; animation: glowpulse 1.6s ease-in-out infinite; }
+@keyframes ping {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  75%, 100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+@keyframes glowpulse { 0%, 100% { transform: translate(-50%, -50%); opacity: 0.12; } 50% { transform: translate(-50%, -50%); opacity: 0.34; } }
+
+/* digs "home" marker */
+.digs-marker { position: absolute; transform: translate(-50%, -50%); pointer-events: none; }
+.digs-marker .dm-core {
+  display: flex; align-items: center; justify-content: center;
+  width: clamp(20px, 3.6%, 34px); height: clamp(20px, 3.6%, 34px);
+  border-radius: 50%; background: #FFFBF1; border: 3px solid #20748A; box-sizing: border-box;
+  color: #20748A; font-weight: 700; font-size: clamp(11px, 2vw, 18px);
+}
 
 .panel {
   background: var(--paper); border: 3px solid var(--ink); border-radius: 4px;
