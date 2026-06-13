@@ -231,11 +231,11 @@ export function tripScreen(root, s, { onEnd }) {
 
   async function showSponsorPitch() {
     const i = await modal({
-      kicker: 'PRIME BEACHFRONT · AVAILABLE NOW', title: 'Sponsor This Plage',
-      body: `<p>This pristine stretch of pixel sand could be YOURS for the festival. Your logo on the umbrellas. A branded in-game day. Custom encounters starring your brand — while your competitor gets mysteriously yacht-blocked.</p>
-             <p>The first plage in advertising history with a verifiable 100% share of beach.</p>
+      kicker: 'PRIME HILLSIDE · AVAILABLE NOW', title: 'Own the Hills',
+      body: `<p>The villa-party hills above Cannes — where the real deals happen, behind gates, out of sight — could carry YOUR brand for the festival. Your logo on the hillside. A branded in-game day. Custom encounters starring your brand, while your competitor gets mysteriously yacht-blocked.</p>
+             <p>The highest-altitude ad placement in advertising.</p>
              <p class="sponsor-email">Enquiries, serious and otherwise:<br>
-             <a href="mailto:tim@neuralift.ai?subject=${encodeURIComponent('Sponsoring a plage in Croisette or Bust 🥐')}"><b>tim@neuralift.ai</b></a></p>`,
+             <a href="mailto:tim@neuralift.ai?subject=${encodeURIComponent('Sponsoring the hills in Croisette or Bust 🥐')}"><b>tim@neuralift.ai</b></a></p>`,
       options: [
         { label: '📋 Copy the email address' },
         { label: 'Back to the Croisette' },
