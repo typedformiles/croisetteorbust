@@ -219,12 +219,12 @@ a { color: var(--azure-dark); }
 
 .sponsor-spot { cursor: pointer; }
 .sponsor-spot .hit { fill: transparent; }
-.sponsor-spot .sp-bg { fill: rgba(126, 12, 247, 0.92); stroke: #FFFBF1; stroke-width: 3; }
-.sponsor-spot .sp-label { font-family: 'Press Start 2P', monospace; font-size: 15px; fill: #FFE49A; }
-.sponsor-spot .sp-sub { font-family: 'Press Start 2P', monospace; font-size: 9px; fill: #FFFBF1; }
-.sponsor-spot .sp-badge { animation: sp-blink 2.4s ease-in-out infinite; transform-origin: center; }
+.sponsor-spot .sp-bg { fill: rgba(126, 12, 247, 0.94); stroke: #FFE49A; stroke-width: 4; }
+.sponsor-spot .sp-label { font-family: 'Press Start 2P', monospace; font-size: 19px; fill: #FFE49A; }
+.sponsor-spot .sp-sub { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px; fill: #FFFBF1; }
+.sponsor-spot .sp-badge { animation: sp-pulse 2.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 .sponsor-spot:hover .sp-badge { animation: none; }
-@keyframes sp-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+@keyframes sp-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 .title-map .sponsor-spot { display: none; }
 
 #player { transition: transform 0.45s ease; pointer-events: none; }

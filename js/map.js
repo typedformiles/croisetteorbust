@@ -9,17 +9,17 @@ const W = 1280, H = 853;
 // Venue key → [x, y] anchor on the illustrated board, sat on the building
 // itself (the label is part of the art).
 export const VENUE_POS = {
-  oldtown:   [210, 250],
-  cafferoma: [395, 360],
-  manolans:  [560, 330],
-  casino:    [880, 300],
-  palais:    [300, 470],
-  cabanas:   [560, 545],
-  carlton:   [870, 500],
-  martinez:  [1140, 600],
-  gutter:    [905, 660],
-  yachtrow:  [165, 590],
-  stroll:    [660, 720],
+  oldtown:   [130, 158],
+  cafferoma: [255, 238],
+  manolans:  [575, 235],
+  casino:    [710, 188],
+  palais:    [130, 318],
+  cabanas:   [435, 340],
+  carlton:   [820, 262],
+  martinez:  [1135, 322],
+  gutter:    [835, 338],
+  yachtrow:  [188, 492],
+  stroll:    [345, 458],
 };
 
 // Where "home" sits for each digs choice (small marker).
@@ -33,15 +33,15 @@ const DIGS_POS = {
 };
 
 // The empty Vallauris / Super-Cannes hills — sponsor real estate.
-const SPONSOR_POS = [1090, 120];
+const SPONSOR_POS = [1055, 140];
 
 function hotspotGroup(v) {
   const [x, y] = VENUE_POS[v.key];
   return `
   <g class="hotspot" data-venue="${v.key}" transform="translate(${x},${y})">
-    <circle class="hit" r="58"></circle>
-    <circle class="state-dot" r="13" cx="0" cy="0"></circle>
-    <text class="closed-ico" y="6" text-anchor="middle">🌙</text>
+    <circle class="hit" r="74"></circle>
+    <circle class="state-dot" r="15" cx="0" cy="0"></circle>
+    <text class="closed-ico" y="7" text-anchor="middle">🌙</text>
   </g>`;
 }
 
@@ -57,11 +57,11 @@ export function renderMap(container) {
     </g>
     ${hotspots}
     <g class="sponsor-spot" transform="translate(${SPONSOR_POS[0]},${SPONSOR_POS[1]})">
-      <circle class="hit" r="74"></circle>
+      <rect class="hit" x="-170" y="-66" width="340" height="132" rx="14"></rect>
       <g class="sp-badge">
-        <rect class="sp-bg" x="-92" y="-22" width="184" height="44" rx="8"></rect>
-        <text class="sp-label" y="-2" text-anchor="middle">SPONSOR</text>
-        <text class="sp-sub" y="13" text-anchor="middle">THESE HILLS →</text>
+        <rect class="sp-bg" x="-168" y="-56" width="336" height="112" rx="16"></rect>
+        <text class="sp-label" y="-12" text-anchor="middle">YOUR BRAND HERE</text>
+        <text class="sp-sub" y="30" text-anchor="middle">▸ tap to sponsor the hills</text>
       </g>
     </g>
     <g id="player">
