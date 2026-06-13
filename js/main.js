@@ -103,8 +103,9 @@ if (location.hash === '#dev-trip' || location.hash === '#dev-end') {
       setTimeout(() => document.querySelector('.modal-options .btn')?.click(), 600);
     }
   });
-} else if (location.hash === '#dev-spin') {
+} else if (location.hash === '#dev-spin' || location.hash === '#dev-spin-auto') {
   showSpin();
+  if (location.hash === '#dev-spin-auto') setTimeout(() => document.querySelector('#pull')?.click(), 300);
 } else {
   showTitle();
 }
