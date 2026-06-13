@@ -9,17 +9,17 @@ const W = 1280, H = 853;
 // Venue key → [x, y] anchor on the illustrated board, sat on the building
 // itself (the label is part of the art).
 export const VENUE_POS = {
-  oldtown:   [130, 158],
-  cafferoma: [255, 238],
-  manolans:  [575, 235],
-  casino:    [710, 188],
-  palais:    [130, 318],
-  cabanas:   [435, 340],
-  carlton:   [820, 262],
-  martinez:  [1135, 322],
-  gutter:    [835, 338],
-  yachtrow:  [188, 492],
-  stroll:    [345, 458],
+  oldtown:   [110, 92],
+  cafferoma: [250, 168],
+  manolans:  [605, 180],
+  casino:    [740, 168],
+  palais:    [110, 232],
+  cabanas:   [565, 268],
+  carlton:   [810, 318],
+  martinez:  [1110, 368],
+  gutter:    [830, 438],
+  yachtrow:  [170, 368],
+  stroll:    [665, 490],
 };
 
 // Where "home" sits for each digs choice (small marker).
@@ -47,9 +47,13 @@ function hotspotGroup(v) {
 
 export function renderMap(container) {
   const hotspots = VENUES.map(hotspotGroup).join('');
+  // The board image is a CSS background on a container locked to its aspect
+  // ratio; the overlay SVG uses preserveAspectRatio="none" so it stretches to
+  // exactly the same box — coordinate (x,y) maps 1:1 to the image with no
+  // letterbox drift (the bug with an embedded <image> + viewBox).
   container.innerHTML = `
-  <svg id="mapsvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Illustrated map of Cannes">
-    <image href="assets/map-board.webp" x="0" y="0" width="${W}" height="${H}"></image>
+  <div class="board" style="background-image:url('assets/map-board.webp')">
+  <svg id="mapsvg" class="board-overlay" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Illustrated map of Cannes">
     <g class="digs-marker" hidden>
       <circle class="dm-glow" r="20"></circle>
       <circle class="dm-core" r="9"></circle>
@@ -69,7 +73,8 @@ export function renderMap(container) {
       <circle class="p-ring" r="22"></circle>
       <circle class="p-core" r="12"></circle>
     </g>
-  </svg>`;
+  </svg>
+  </div>`;
 }
 
 export function updateMap(s, DAY_END) {
