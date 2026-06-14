@@ -3,7 +3,7 @@
 import { newTrip } from './engine.js';
 import { renderMap } from './map.js';
 import { modal } from './ui.js';
-import { spinScreen } from './screens/spin.js?v=lush3';
+import { spinScreen } from './screens/spin.js';
 import { tripScreen } from './screens/trip.js';
 import { reckoningScreen } from './screens/reckoning.js';
 
