@@ -23,7 +23,7 @@ export function spinScreen(root, { onDone }) {
   root.innerHTML = `
     <div class="screen spin-screen">
       <div class="spin-head">
-        <h2 class="pixel-h">THE BUDGET MEETING</h2>
+        <h2 class="pixel-h">LE BUDGET MEETING</h2>
         <p class="spin-sub">Your company decides your Cannes. You watch. The machine knows.</p>
       </div>
       <div class="reels">
