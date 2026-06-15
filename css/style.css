@@ -181,6 +181,27 @@ a { color: var(--azure-dark); }
 }
 .hud-day { font-size: 12px; color: var(--terracotta-dark); }
 .hud-zzz { margin-left: 8px; }
+.hud-left { display: flex; align-items: center; gap: 8px; }
+.hud-inv { margin-left: auto; display: flex; gap: 6px; }
+.inv-chip {
+  position: relative; border: 2px solid var(--ink); background: var(--paper);
+  border-radius: 9px; padding: 4px 8px; cursor: pointer; line-height: 1;
+  box-shadow: 0 2px 0 var(--shadow);
+}
+.inv-chip .inv-ico { font-size: 16px; }
+.inv-chip .inv-tip {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0; z-index: 60;
+  width: max-content; max-width: 220px; text-align: left;
+  background: var(--ink); color: var(--cream); font-size: 12px; line-height: 1.4;
+  padding: 8px 10px; border-radius: 8px; box-shadow: 0 6px 18px rgba(39,49,74,0.4);
+  font-family: 'Space Grotesk', sans-serif; white-space: normal;
+}
+.inv-chip .inv-tip b { color: var(--gold-light); font-family: 'Press Start 2P', monospace; font-size: 8px; display: block; margin-bottom: 3px; }
+.inv-chip .inv-tip::before {
+  content: ''; position: absolute; bottom: 100%; right: 12px;
+  border: 6px solid transparent; border-bottom-color: var(--ink);
+}
+.inv-chip.open .inv-tip { display: block; }
 .hud-mid { display: flex; gap: 18px; }
 .hud-stat label { display: block; font-family: 'Press Start 2P', monospace; font-size: 7px; color: #8A7D63; margin-bottom: 4px; }
 .hud-stat b { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--ink); }

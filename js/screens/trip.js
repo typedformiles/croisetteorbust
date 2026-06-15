@@ -31,6 +31,7 @@ export function tripScreen(root, s, { onEnd }) {
         <div class="hud-left">
           <span class="hud-day pixel-h" id="hud-day"></span>
           <span class="hud-zzz" id="hud-zzz" title="sleep debt"></span>
+          <span class="hud-inv" id="hud-inv"></span>
         </div>
         <div class="hud-mid">
           <div class="hud-stat"><label>CASH</label><b id="hud-cash"></b></div>
@@ -93,6 +94,8 @@ export function tripScreen(root, s, { onEnd }) {
     $('#m-brand').style.width = s.brand + '%';
     $('#m-joie').style.width = s.joie + '%';
 
+    renderInventory();
+
     $('#tb-hint').textContent = `📍 You're at ${VENUE_MAP[s.location].name}. Tap a place to go there.`;
     $('#btn-night').hidden = isFinalDay(s);
     $('#btn-airport').hidden = !isFinalDay(s);
@@ -102,6 +105,36 @@ export function tripScreen(root, s, { onEnd }) {
       `<p class="log ${l.cls}"><span class="log-t">${l.day} ${hourLabel(l.hour)}</span> ${esc(l.text)}</p>`).reverse().join('');
 
     updateMap(s, DAY_END);
+  }
+
+  // ---- inventory chips (digs + pass) ----
+
+  const DIGS_NAME = {
+    antibes: 'Antibes apartment', carnot: 'Carnot pad', villa: 'Croix de Gardes villa',
+    hotel: 'Croisette hotel', yacht: 'The yacht', ownyacht: 'Your chartered yacht',
+  };
+
+  function renderInventory() {
+    const chips = [
+      { icon: '🏠', label: 'DIGS', tip: DIGS_NAME[s.digs] || 'Your digs' },
+    ];
+    if (s.hasPass) chips.push({ icon: '🎫', label: 'PASS', tip: 'Festival pass — the Palais is yours' });
+    else if (s.badge === 'borrowed') chips.push({ icon: '🎫', label: 'PASS', tip: "Henrik’s badge — scans green (for now)" });
+    else if (s.badge === 'kept') chips.push({ icon: '🪪', label: 'BADGE', tip: 'Found badge — untested at the Palais' });
+
+    const inv = $('#hud-inv');
+    inv.innerHTML = chips.map((c) => `
+      <button class="inv-chip" type="button">
+        <span class="inv-ico">${c.icon}</span>
+        <span class="inv-tip"><b>${esc(c.label)}</b> ${esc(c.tip)}</span>
+      </button>`).join('');
+    inv.querySelectorAll('.inv-chip').forEach((b) =>
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = b.classList.contains('open');
+        inv.querySelectorAll('.inv-chip').forEach((x) => x.classList.remove('open'));
+        if (!open) b.classList.add('open');
+      }));
   }
 
   // ---- venue sheet ----
@@ -371,6 +404,10 @@ export function tripScreen(root, s, { onEnd }) {
   });
   $('#vs-close').addEventListener('click', closeSheet);
   $('#vs-scrim').addEventListener('click', closeSheet);
+  // tap anywhere else closes an open inventory tooltip
+  document.addEventListener('click', () => {
+    root.querySelectorAll('.inv-chip.open').forEach((x) => x.classList.remove('open'));
+  });
   $('#btn-night').addEventListener('click', () => { if (!busy && !s.over) doNight(false); });
   $('#btn-airport').addEventListener('click', async () => {
     if (busy || s.over) return;
