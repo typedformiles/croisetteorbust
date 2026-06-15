@@ -85,7 +85,11 @@ export function updateMap(s, DAY_END) {
   for (const g of board.querySelectorAll('.hotspot')) {
     const key = g.dataset.venue;
     const v = VENUES.find((x) => x.key === key);
-    const open = s.hour >= v.open[0] && s.hour <= Math.min(v.open[1], DAY_END - 1);
+    // Judge "open" by when you'd ARRIVE (30 min travel) for places you'd
+    // travel to, so a venue about to open doesn't flash a confusing moon —
+    // and one about to close (you'd arrive after it shuts) reads as closed.
+    const at = key === s.location ? s.hour : s.hour + 0.5;
+    const open = at >= v.open[0] && at <= Math.min(v.open[1], DAY_END - 1);
     g.classList.toggle('closed', !open);
     g.classList.toggle('current', key === s.location);
     g.classList.toggle('locked', key === 'palais' && !s.hasPass && s.badge !== 'borrowed');

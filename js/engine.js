@@ -8,6 +8,7 @@ import { pickSegment, pickAward } from './data/segments.js';
 
 export const DAY_END = 28;       // 4am hard stop
 export const DEPART_HOUR = 12;   // departure-day noon checkout
+export const TRAVEL_HOURS = 0.5; // everything in Cannes is ~30 min apart
 
 export function newTrip(spin) {
   const s = {
@@ -95,7 +96,7 @@ export function checkClock(s) {
 // Returns { ok, gate?, text? }. Gate types are resolved by the UI via the
 // follow-up functions below.
 export function travel(s, key) {
-  advance(s, 1);
+  advance(s, TRAVEL_HOURS);
   const v = VENUE_MAP[key];
 
   if (key === 'palais') {

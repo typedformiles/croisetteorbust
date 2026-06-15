@@ -17,7 +17,7 @@ import { VENUE_MAP } from '../data/venues.js';
 import {
   cash, roiOf, dayInfo, isFinalDay, availableActions, act, travel, rollEncounter,
   resolveEncounter, resolveBadgeScan, attemptConfidentWalk, startNight,
-  finishNight, collapse, checkClock, addLog, rollMishap, DAY_END,
+  finishNight, collapse, checkClock, addLog, rollMishap, DAY_END, TRAVEL_HOURS,
 } from '../engine.js';
 
 export function tripScreen(root, s, { onEnd }) {
@@ -186,14 +186,14 @@ export function tripScreen(root, s, { onEnd }) {
         b.addEventListener('click', () => onAct(acts[Number(b.dataset.i)])));
       body.querySelector('#vs-leave').addEventListener('click', closeSheet);
     } else {
-      // travel prospect
-      const arriveHour = s.hour + 1;
+      // travel prospect — judged by whether it's open when you'd ARRIVE
+      const arriveHour = s.hour + TRAVEL_HOURS;
       const openOnArrival = venueOpenAt(v, arriveHour);
       if (openOnArrival) {
         body.innerHTML = `
           <button class="btn gold vs-travel" id="vs-travel">
             <span class="a-label">Travel here</span>
-            <span class="a-meta">costs 1 hour</span>
+            <span class="a-meta">30 min away</span>
           </button>
           <button class="btn ghost vs-leave" id="vs-leave">Cancel</button>`;
         body.querySelector('#vs-travel').addEventListener('click', () => onTravel(sheetKey));

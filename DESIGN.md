@@ -69,10 +69,13 @@ no shared hand. Replay is the hook; the share card carries the bragging.
 ## Act 2 — The Trip
 
 ### Time model
-- Each day runs 08:00 → 04:00 in 1-hour blocks.
-- Usable hours = baseline 16 ± digs modifier − hangover/sleep-debt penalties.
-- Moving between venues costs time (1h between zones, adjacency map TBD with
-  the map art).
+- Each day runs 08:00 → 04:00. Actions cost 1h; **travel between venues costs
+  30 min** (everything in Cannes is ~30 min apart) → the clock works in
+  half-hour units (see `TRAVEL_HOURS` in engine.js, `hourLabel` for :30).
+- Open/closed is judged by ARRIVAL time (now + 30 min travel) for places you'd
+  travel to, so a venue about to open doesn't flash a confusing "closed" moon,
+  and one you'd reach after it shuts reads as closed.
+- Usable hours = baseline ± digs modifier − hangover/sleep-debt penalties.
 - Each night you choose when to call it. Sleep < 6h adds SLEEP DEBT:
   shifts random-encounter rolls toward bad outcomes and dulls action yields
   the next day.
