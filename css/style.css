@@ -253,17 +253,17 @@ a { color: var(--azure-dark); }
 .hotspot.locked .state-dot { background: rgba(120, 120, 120, 0.55); }
 
 /* sponsor badge — anchored into the top-right hills so it never clips */
-.sponsor-spot {
-  position: absolute; top: 5%; right: clamp(8px, 2%, 20px); transform-origin: top right;
-  background: rgba(126, 12, 247, 0.94); border: 3px solid #FFE49A; border-radius: 14px;
-  padding: clamp(5px, 1.2%, 11px) clamp(9px, 1.8%, 16px); cursor: pointer;
-  display: flex; flex-direction: column; gap: 3px; align-items: center;
-  box-shadow: 0 4px 12px rgba(39,49,74,0.3);
+/* a quiet pale disc in the hills — a low-key "these hills are for hire" wink */
+.hills-hint {
+  position: absolute; top: 6%; right: clamp(10px, 3%, 28px);
+  width: clamp(34px, 6%, 52px); height: clamp(34px, 6%, 52px); box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(16px, 3vw, 26px); line-height: 1;
+  background: #FFFBF1; border: 2px solid #fff; border-radius: 50%;
+  box-shadow: 0 3px 9px rgba(39,49,74,0.5); cursor: pointer; opacity: 0.9;
 }
-.sponsor-spot:hover { filter: brightness(1.08); }
-.sponsor-spot .sp-label { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.9vw, 17px); color: #FFE49A; white-space: nowrap; }
-.sponsor-spot .sp-sub { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(8px, 1.5vw, 14px); color: #FFFBF1; white-space: nowrap; }
-.title-map .sponsor-spot { display: none; }
+.hills-hint:hover { opacity: 1; filter: brightness(1.04); }
+.title-map .hills-hint { display: none; }
 
 /* player beacon */
 #player {
@@ -382,12 +382,6 @@ a { color: var(--azure-dark); }
 .modal.good .modal-title { color: var(--green); }
 .modal-body { font-size: 14.5px; line-height: 1.6; }
 .modal-body p { margin: 0 0 10px; }
-.sponsor-email {
-  background: var(--sand); border: 2px dashed #C9B88E; border-radius: 3px;
-  padding: 12px; text-align: center; font-size: 15px;
-}
-.sponsor-email a { color: var(--azure-dark); text-decoration: none; }
-.sponsor-email b { font-size: 17px; }
 .modal-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
 .modal-options .btn { text-align: left; font-size: 10px; line-height: 1.5; }
 .opt-sub { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 12px; opacity: 0.85; margin-top: 4px; }

@@ -376,16 +376,14 @@ export function tripScreen(root, s, { onEnd }) {
 
   async function showSponsorPitch() {
     const i = await modal({
-      kicker: 'PRIME HILLSIDE · AVAILABLE NOW', title: 'Own the Hills',
-      body: `<p>The villa-party hills above Cannes — where the real deals happen, behind gates, out of sight — could carry YOUR brand for the festival. Your logo on the hillside. A branded in-game day. Custom encounters starring your brand, while your competitor gets mysteriously yacht-blocked.</p>
-             <p>The highest-altitude ad placement in advertising.</p>
-             <p class="sponsor-email">Enquiries, serious and otherwise:<br>
-             <a href="mailto:tim@neuralift.ai?subject=${encodeURIComponent('Sponsoring the hills in Croisette or Bust 🥐')}"><b>tim@neuralift.ai</b></a></p>`,
-      options: [{ label: '📋 Copy the email address' }, { label: 'Back to the Croisette' }],
+      kicker: 'THE HILLS', title: 'These hills are for hire 🤙',
+      body: `<p>The villa-party hills above Cannes could host your brand for a day — a custom event up here, your logo on the map, the lot.</p>
+             <p>Know someone who'd love it — or are you someone? <b>tim@neuralift.ai</b></p>`,
+      options: [{ label: '📋 Copy the email' }, { label: 'Back to the Croisette' }],
     });
     if (i === 0) {
-      try { await navigator.clipboard.writeText('tim@neuralift.ai'); toast('tim@neuralift.ai copied — we await your logo.'); }
-      catch { toast('Copy blocked — it’s tim@neuralift.ai'); }
+      try { await navigator.clipboard.writeText('tim@neuralift.ai'); toast('tim@neuralift.ai copied 🤙'); }
+      catch { toast('It’s tim@neuralift.ai'); }
     }
   }
 
@@ -398,7 +396,7 @@ export function tripScreen(root, s, { onEnd }) {
   }
 
   $('#map-wrap').addEventListener('click', (e) => {
-    if (e.target.closest('.sponsor-spot')) { showSponsorPitch(); return; }
+    if (e.target.closest('.hills-hint')) { showSponsorPitch(); return; }
     const g = e.target.closest('.hotspot');
     if (g) onVenueTap(g.dataset.venue);
   });

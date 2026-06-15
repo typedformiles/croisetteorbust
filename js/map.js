@@ -54,10 +54,7 @@ export function renderMap(container) {
   container.innerHTML = `
   <div class="board" style="background-image:url('assets/map-board.webp')">
     ${hotspots}
-    <button class="sponsor-spot" type="button">
-      <span class="sp-label">YOUR BRAND HERE</span>
-      <span class="sp-sub">▸ tap to sponsor the hills</span>
-    </button>
+    <button class="hills-hint" type="button" aria-label="Sponsor the hills">🤙</button>
     <div class="digs-marker" hidden>
       <span class="dm-core">⌂</span>
     </div>
