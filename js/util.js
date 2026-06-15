@@ -30,10 +30,12 @@ export function money(n) {
 }
 
 export function hourLabel(h) {
-  const hh = h % 24;
+  const whole = Math.floor(h);
+  const half = h - whole >= 0.5;
+  const hh = ((whole % 24) + 24) % 24;
   const ampm = hh >= 12 ? 'PM' : 'AM';
   const h12 = hh % 12 === 0 ? 12 : hh % 12;
-  return `${h12}${ampm}`;
+  return `${h12}${half ? ':30' : ''}${ampm}`;
 }
 
 export const el = (sel) => document.querySelector(sel);

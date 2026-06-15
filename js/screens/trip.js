@@ -1,4 +1,14 @@
-// The Trip — map, HUD, actions, encounters, nights.
+// The Trip — map, HUD, a focused venue sheet, encounters, nights.
+//
+// Interaction model: tapping a place opens a venue SHEET (bottom-sheet on
+// mobile, floating card on desktop). If you're not there it offers
+// "Travel here"; once there it lists the venue's actions and shows each
+// outcome inline, on-screen, the moment it happens. The log below is a
+// scrollable history, no longer the primary feedback channel.
+//
+// Resolution order is explicit: the thing you click (travel or an action)
+// resolves and shows its outcome FIRST; only then does a random encounter
+// fire, as its own modal step.
 
 import { money, hourLabel, esc } from '../util.js';
 import { modal, toast } from '../ui.js';
@@ -7,11 +17,13 @@ import { VENUE_MAP } from '../data/venues.js';
 import {
   cash, roiOf, dayInfo, isFinalDay, availableActions, act, travel, rollEncounter,
   resolveEncounter, resolveBadgeScan, attemptConfidentWalk, startNight,
-  finishNight, collapse, checkClock, addLog, rollMishap, DAY_END,
+  finishNight, collapse, checkClock, addLog, rollMishap, DAY_END, TRAVEL_HOURS,
 } from '../engine.js';
 
 export function tripScreen(root, s, { onEnd }) {
   let busy = false;
+  let sheetKey = null;     // venue currently shown in the sheet, or null
+  let sheetOutcome = null; // { text, cls } shown prominently in the open sheet
 
   root.innerHTML = `
     <div class="screen trip-screen">
@@ -19,6 +31,7 @@ export function tripScreen(root, s, { onEnd }) {
         <div class="hud-left">
           <span class="hud-day pixel-h" id="hud-day"></span>
           <span class="hud-zzz" id="hud-zzz" title="sleep debt"></span>
+          <span class="hud-inv" id="hud-inv"></span>
         </div>
         <div class="hud-mid">
           <div class="hud-stat"><label>CASH</label><b id="hud-cash"></b></div>
@@ -33,64 +46,169 @@ export function tripScreen(root, s, { onEnd }) {
         </div>
       </header>
 
-      <div class="trip-main">
-        <div class="map-wrap" id="map-wrap"></div>
-        <aside class="panel">
-          <div class="venue-head">
-            <h3 id="v-name" class="pixel-h"></h3>
-            <p id="v-blurb"></p>
-          </div>
-          <div class="actions" id="v-actions"></div>
-          <div class="night-row">
-            <button class="btn night" id="btn-night">🛏 CALL IT A NIGHT</button>
-            <button class="btn gold" id="btn-airport" hidden>✈ TO THE AIRPORT</button>
-          </div>
-        </aside>
+      <div class="map-wrap" id="map-wrap"></div>
+
+      <div class="trip-bar">
+        <span class="tb-hint" id="tb-hint">Tap a place on the map to go there.</span>
+        <div class="tb-controls">
+          <button class="btn night" id="btn-night">🛏 CALL IT A NIGHT</button>
+          <button class="btn gold" id="btn-airport" hidden>✈ TO THE AIRPORT</button>
+        </div>
       </div>
 
-      <section class="logfeed" id="logfeed"></section>
+      <details class="logwrap" id="logwrap">
+        <summary>Trip log</summary>
+        <section class="logfeed" id="logfeed"></section>
+      </details>
+
+      <!-- venue sheet -->
+      <div class="venue-sheet" id="sheet" hidden>
+        <div class="vs-scrim" id="vs-scrim"></div>
+        <div class="vs-card">
+          <button class="vs-close" id="vs-close" aria-label="Close">✕</button>
+          <h3 class="vs-name pixel-h" id="vs-name"></h3>
+          <p class="vs-blurb" id="vs-blurb"></p>
+          <div class="vs-outcome" id="vs-outcome" hidden></div>
+          <div class="vs-body" id="vs-body"></div>
+        </div>
+      </div>
     </div>`;
 
   renderMap(root.querySelector('#map-wrap'));
 
-  // ---- rendering ----
+  const $ = (sel) => root.querySelector(sel);
+
+  // ---- HUD / map / log ----
 
   function render() {
     const d = dayInfo(s);
-    root.querySelector('#hud-day').textContent = `${d.name} · ${hourLabel(s.hour)}`;
-    root.querySelector('#hud-zzz').textContent = s.sleepDebt >= 1 ? '💤'.repeat(Math.min(4, Math.ceil(s.sleepDebt))) : '';
-    root.querySelector('#hud-cash').textContent = money(cash(s));
-    root.querySelector('#hud-pipe').textContent = money(s.leadValue);
+    $('#hud-day').textContent = `${d.name} · ${hourLabel(s.hour)}`;
+    $('#hud-zzz').textContent = s.sleepDebt >= 1 ? '💤'.repeat(Math.min(4, Math.ceil(s.sleepDebt))) : '';
+    $('#hud-cash').textContent = money(cash(s));
+    $('#hud-pipe').textContent = money(s.leadValue);
     const roi = roiOf(s);
-    root.querySelector('#hud-roi').textContent = `${roi >= 10 ? Math.round(roi) : roi.toFixed(1)}x`;
-    root.querySelector('#m-energy').style.width = s.energy + '%';
-    root.querySelector('#m-energy').parentElement.classList.toggle('low', s.energy < 30);
-    root.querySelector('#m-network').style.width = s.network + '%';
-    root.querySelector('#m-brand').style.width = s.brand + '%';
-    root.querySelector('#m-joie').style.width = s.joie + '%';
+    $('#hud-roi').textContent = `${roi >= 10 ? Math.round(roi) : roi.toFixed(1)}x`;
+    $('#m-energy').style.width = s.energy + '%';
+    $('#m-energy').parentElement.classList.toggle('low', s.energy < 30);
+    $('#m-network').style.width = s.network + '%';
+    $('#m-brand').style.width = s.brand + '%';
+    $('#m-joie').style.width = s.joie + '%';
 
-    const v = VENUE_MAP[s.location];
-    root.querySelector('#v-name').textContent = v.name;
-    root.querySelector('#v-blurb').textContent = v.blurb;
+    renderInventory();
 
-    const acts = availableActions(s);
-    root.querySelector('#v-actions').innerHTML = acts.map((a, i) => `
-      <button class="btn action" data-i="${i}" ${a.enabled ? '' : 'disabled'}>
-        <span class="a-label">${esc(a.label)}</span>
-        <span class="a-meta">${a.cost ? money(a.cost) : 'free'} · 1h${!a.hourOk ? ' · not now' : ''}${!a.cashOk ? ' · can’t afford' : ''}${!a.onceOk ? ' · done today' : ''}</span>
-        <span class="a-desc">${esc(a.desc)}</span>
-      </button>`).join('');
-    root.querySelectorAll('.btn.action').forEach((b) =>
-      b.addEventListener('click', () => onAct(acts[Number(b.dataset.i)])));
+    $('#tb-hint').textContent = `📍 You're at ${VENUE_MAP[s.location].name}. Tap a place to go there.`;
+    $('#btn-night').hidden = isFinalDay(s);
+    $('#btn-airport').hidden = !isFinalDay(s);
 
-    root.querySelector('#btn-night').hidden = isFinalDay(s);
-    root.querySelector('#btn-airport').hidden = !isFinalDay(s);
-
-    const feed = root.querySelector('#logfeed');
+    const feed = $('#logfeed');
     feed.innerHTML = s.log.slice(-40).map((l) =>
       `<p class="log ${l.cls}"><span class="log-t">${l.day} ${hourLabel(l.hour)}</span> ${esc(l.text)}</p>`).reverse().join('');
 
     updateMap(s, DAY_END);
+  }
+
+  // ---- inventory chips (digs + pass) ----
+
+  const DIGS_NAME = {
+    antibes: 'Antibes apartment', carnot: 'Carnot pad', villa: 'Croix de Gardes villa',
+    hotel: 'Croisette hotel', yacht: 'The yacht', ownyacht: 'Your chartered yacht',
+  };
+
+  function renderInventory() {
+    const chips = [
+      { icon: '🏠', label: 'DIGS', tip: DIGS_NAME[s.digs] || 'Your digs' },
+    ];
+    if (s.hasPass) chips.push({ icon: '🎫', label: 'PASS', tip: 'Festival pass — the Palais is yours' });
+    else if (s.badge === 'borrowed') chips.push({ icon: '🎫', label: 'PASS', tip: "Henrik’s badge — scans green (for now)" });
+    else if (s.badge === 'kept') chips.push({ icon: '🪪', label: 'BADGE', tip: 'Found badge — untested at the Palais' });
+
+    const inv = $('#hud-inv');
+    inv.innerHTML = chips.map((c) => `
+      <button class="inv-chip" type="button">
+        <span class="inv-ico">${c.icon}</span>
+        <span class="inv-tip"><b>${esc(c.label)}</b> ${esc(c.tip)}</span>
+      </button>`).join('');
+    inv.querySelectorAll('.inv-chip').forEach((b) =>
+      b.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const open = b.classList.contains('open');
+        inv.querySelectorAll('.inv-chip').forEach((x) => x.classList.remove('open'));
+        if (!open) b.classList.add('open');
+      }));
+  }
+
+  // ---- venue sheet ----
+
+  function venueOpenAt(v, hour) {
+    return hour >= v.open[0] && hour <= Math.min(v.open[1], DAY_END - 1);
+  }
+
+  function openSheet(key, outcome = null) {
+    sheetKey = key;
+    if (outcome) sheetOutcome = outcome;
+    renderSheet();
+    $('#sheet').hidden = false;
+  }
+
+  function closeSheet() {
+    sheetKey = null; sheetOutcome = null;
+    $('#sheet').hidden = true;
+  }
+
+  function renderSheet() {
+    if (!sheetKey) return;
+    const v = VENUE_MAP[sheetKey];
+    const here = sheetKey === s.location;
+    $('#vs-name').textContent = v.name;
+    $('#vs-blurb').textContent = v.blurb;
+
+    const outEl = $('#vs-outcome');
+    if (sheetOutcome) {
+      outEl.hidden = false;
+      outEl.className = `vs-outcome ${sheetOutcome.cls || ''}`;
+      outEl.textContent = sheetOutcome.text;
+    } else {
+      outEl.hidden = true;
+    }
+
+    const body = $('#vs-body');
+    if (here) {
+      // action list for the venue you're at
+      const acts = availableActions(s);
+      body.innerHTML = acts.map((a, i) => `
+        <button class="btn action" data-i="${i}" ${a.enabled ? '' : 'disabled'}>
+          <span class="a-label">${esc(a.label)}</span>
+          <span class="a-meta">${a.cost ? money(a.cost) : 'free'} · 1h${!a.hourOk ? ' · not now' : ''}${!a.cashOk ? ' · can’t afford' : ''}${!a.onceOk ? ' · done today' : ''}</span>
+          <span class="a-desc">${esc(a.desc)}</span>
+        </button>`).join('')
+        + `<button class="btn ghost vs-leave" id="vs-leave">← Back to the map</button>`;
+      body.querySelectorAll('.btn.action').forEach((b) =>
+        b.addEventListener('click', () => onAct(acts[Number(b.dataset.i)])));
+      body.querySelector('#vs-leave').addEventListener('click', closeSheet);
+    } else {
+      // travel prospect — judged by whether it's open when you'd ARRIVE
+      const arriveHour = s.hour + TRAVEL_HOURS;
+      const openOnArrival = venueOpenAt(v, arriveHour);
+      if (openOnArrival) {
+        body.innerHTML = `
+          <button class="btn gold vs-travel" id="vs-travel">
+            <span class="a-label">Travel here</span>
+            <span class="a-meta">30 min away</span>
+          </button>
+          <button class="btn ghost vs-leave" id="vs-leave">Cancel</button>`;
+        body.querySelector('#vs-travel').addEventListener('click', () => onTravel(sheetKey));
+      } else {
+        body.innerHTML = `
+          <p class="vs-closed">Closed right now — opens ${hourLabel(v.open[0])}.</p>
+          <button class="btn ghost vs-leave" id="vs-leave">Cancel</button>`;
+      }
+      body.querySelector('#vs-leave').addEventListener('click', closeSheet);
+    }
+  }
+
+  function setOutcome(text, cls = '') {
+    sheetOutcome = { text, cls };
+    if (sheetKey) renderSheet();
   }
 
   // ---- flows ----
@@ -98,8 +216,7 @@ export function tripScreen(root, s, { onEnd }) {
   async function maybeEncounter(enc) {
     if (!enc) return;
     const idx = await modal({
-      kicker: 'ENCOUNTER',
-      title: enc.title,
+      kicker: 'A WILD ENCOUNTER', title: enc.title,
       body: `<p>${esc(typeof enc.text === 'function' ? enc.text(s) : enc.text)}</p>`,
       options: enc.options.map((o) => {
         const broke = o.cost && o.cost > cash(s);
@@ -118,33 +235,34 @@ export function tripScreen(root, s, { onEnd }) {
     render();
     await modal({
       kicker: 'RUNNING ON EMPTY', title: m.title,
-      body: `<p>${esc(m.text)}</p>`,
-      options: [{ label: 'Ugh.' }], cls: 'bad',
+      body: `<p>${esc(m.text)}</p>`, options: [{ label: 'Ugh.' }], cls: 'bad',
     });
   }
 
+  // returns true if the trip ended
   async function postMove() {
     render();
     const c = checkClock(s);
-    if (c === 'depart') return endTrip('Noon on departure day. A taxi, an airport, a window seat, a feeling.');
+    if (c === 'depart') { endTrip('Noon on departure day. A taxi, an airport, a window seat, a feeling.'); return true; }
     if (c === 'collapse') {
       const r = collapse(s);
+      closeSheet();
       await modal({ kicker: 'SYSTEM FAILURE', title: 'Lights Out', body: `<p>${esc(r.text)}</p>`, options: [{ label: 'Ow.' }], cls: 'bad' });
-      if (s.dayIdx > s.departureIdx) return endTrip('You technically missed your flight. The airline, for a fee that haunts you, found another.');
+      if (s.dayIdx > s.departureIdx) { endTrip('You technically missed your flight. The airline, for a fee that haunts you, found another.'); return true; }
       render();
-      return;
+      return false;
     }
-    if (c === 'forcedNight') return doNight(true);
+    if (c === 'forcedNight') { await doNight(true); return s.over; }
+    return false;
   }
 
-  async function onVenueClick(key) {
-    if (busy || s.over || key === s.location) return;
-    const v = VENUE_MAP[key];
-    const open = s.hour + 1 >= v.open[0] && s.hour + 1 <= Math.min(v.open[1], DAY_END - 1);
-    if (!open) { toast(`${v.name} is closed at this hour.`); return; }
+  async function onTravel(key) {
+    if (busy || s.over) return;
     busy = true;
-    const res = travel(s, key);
+    const v = VENUE_MAP[key];
+    const res = travel(s, key); // advances 1h, sets location or returns a gate
 
+    let arrived = res.ok;
     if (res.gate === 'badgeScan') {
       const choice = await modal({
         kicker: 'THE PALAIS', title: 'Henrik’s Moment of Truth',
@@ -155,8 +273,10 @@ export function tripScreen(root, s, { onEnd }) {
         const r = resolveBadgeScan(s);
         render();
         await modal({ kicker: 'THE SCANNER', title: r.ok ? 'Green Light' : 'Red Light', body: `<p>${esc(r.text)}</p>`, options: [{ label: r.ok ? 'Welcome back, Henrik' : 'A windowless room' }], cls: r.ok ? 'good' : 'bad' });
+        arrived = r.ok;
       } else {
         addLog(s, 'You veer off at the last second and inspect a palm tree with great interest. Henrik lives to scan another day.', 'sys');
+        arrived = false;
       }
     } else if (res.gate === 'noPass') {
       const choice = await modal({
@@ -172,32 +292,57 @@ export function tripScreen(root, s, { onEnd }) {
         const r = attemptConfidentWalk(s);
         render();
         await modal({ kicker: 'SECURITY', title: r.ok ? 'In.' : 'Denied.', body: `<p>${esc(r.text)}</p>`, options: [{ label: 'Continue' }], cls: r.ok ? 'good' : 'bad' });
+        arrived = r.ok;
       } else {
         addLog(s, 'You admire the Palais from a respectful, badgeless distance.', 'sys');
+        arrived = false;
       }
-    } else if (res.ok) {
+    } else if (res.text === 'yachtblocked') {
+      arrived = false;
       render();
-      await maybeEncounter(rollEncounter(s));
+      await modal({
+        kicker: 'YACHT ROW', title: 'Yacht-Blocked',
+        body: '<p>A clipboard reviews you, finds you wanting, and suggests "the public beach is lovely" — at gangway volume, in front of a deck party that briefly stops to enjoy it. You retreat along the boardwalk.</p>',
+        options: [{ label: 'The indignity' }], cls: 'bad',
+      });
     }
-    await maybeMishap();
-    await postMove();
+
     render();
+
+    if (arrived) {
+      // 1) the click resolves first: you're here.
+      openSheet(s.location, { text: `You make your way over to ${VENUE_MAP[s.location].name}.`, cls: 'arrive' });
+      // 2) then a random encounter may fire.
+      await maybeEncounter(rollEncounter(s));
+      await maybeMishap();
+      const ended = await postMove();
+      if (!ended) { sheetKey = s.location; renderSheet(); render(); }
+    } else {
+      // didn't get in — show what happened, stay put
+      closeSheet();
+      await maybeMishap();
+      await postMove();
+    }
     busy = false;
   }
 
   async function onAct(action) {
     if (busy || s.over || !action.enabled) return;
     busy = true;
-    const { encounter } = act(s, action.key);
+    const { text, encounter } = act(s, action.key);
+    // 1) the action you clicked resolves and is shown, in view, first.
+    setOutcome(text, 'act');
     render();
+    // 2) then a random encounter, if any, as its own step.
     await maybeEncounter(encounter);
     await maybeMishap();
-    await postMove();
-    render();
+    const ended = await postMove();
+    if (!ended && sheetKey) renderSheet();
     busy = false;
   }
 
   async function doNight(forced = false) {
+    closeSheet();
     const { missedTrain } = startNight(s, { forced });
     let choice = null;
     if (missedTrain) {
@@ -227,7 +372,7 @@ export function tripScreen(root, s, { onEnd }) {
     onEnd();
   }
 
-  // ---- wire up ----
+  // ---- sponsor ----
 
   async function showSponsorPitch() {
     const i = await modal({
@@ -236,28 +381,35 @@ export function tripScreen(root, s, { onEnd }) {
              <p>The highest-altitude ad placement in advertising.</p>
              <p class="sponsor-email">Enquiries, serious and otherwise:<br>
              <a href="mailto:tim@neuralift.ai?subject=${encodeURIComponent('Sponsoring the hills in Croisette or Bust 🥐')}"><b>tim@neuralift.ai</b></a></p>`,
-      options: [
-        { label: '📋 Copy the email address' },
-        { label: 'Back to the Croisette' },
-      ],
+      options: [{ label: '📋 Copy the email address' }, { label: 'Back to the Croisette' }],
     });
     if (i === 0) {
-      try {
-        await navigator.clipboard.writeText('tim@neuralift.ai');
-        toast('tim@neuralift.ai copied — we await your logo.');
-      } catch {
-        toast('Copy blocked — it’s tim@neuralift.ai');
-      }
+      try { await navigator.clipboard.writeText('tim@neuralift.ai'); toast('tim@neuralift.ai copied — we await your logo.'); }
+      catch { toast('Copy blocked — it’s tim@neuralift.ai'); }
     }
   }
 
-  root.querySelector('#map-wrap').addEventListener('click', (e) => {
-    if (e.target.closest('.sponsor-spot')) { showSponsorPitch(); return; } // no game time spent — it's an ad
+  // ---- wire up ----
+
+  function onVenueTap(key) {
+    if (busy || s.over) return;
+    sheetOutcome = null;
+    openSheet(key);
+  }
+
+  $('#map-wrap').addEventListener('click', (e) => {
+    if (e.target.closest('.sponsor-spot')) { showSponsorPitch(); return; }
     const g = e.target.closest('.hotspot');
-    if (g) onVenueClick(g.dataset.venue);
+    if (g) onVenueTap(g.dataset.venue);
   });
-  root.querySelector('#btn-night').addEventListener('click', () => { if (!busy && !s.over) doNight(false); });
-  root.querySelector('#btn-airport').addEventListener('click', async () => {
+  $('#vs-close').addEventListener('click', closeSheet);
+  $('#vs-scrim').addEventListener('click', closeSheet);
+  // tap anywhere else closes an open inventory tooltip
+  document.addEventListener('click', () => {
+    root.querySelectorAll('.inv-chip.open').forEach((x) => x.classList.remove('open'));
+  });
+  $('#btn-night').addEventListener('click', () => { if (!busy && !s.over) doNight(false); });
+  $('#btn-airport').addEventListener('click', async () => {
     if (busy || s.over) return;
     const i = await modal({
       kicker: 'DEPARTURE DAY', title: 'Leave Early?',
@@ -267,7 +419,7 @@ export function tripScreen(root, s, { onEnd }) {
     if (i === 0) endTrip('You leave on your own terms — the rarest Cannes exit of all.');
   });
 
-  // arrival interstitial
+  // arrival interstitial → then open the starting venue so first-timers see what to do
   render();
   (async () => {
     const d = dayInfo(s);
@@ -276,10 +428,12 @@ export function tripScreen(root, s, { onEnd }) {
       body: `${s.company ? `<p><b>${esc(s.company)}</b></p>` : ''}
              <p>You land via ${esc(s.flight.label)} and step into the Riviera heat. Home for the week: ${esc(s.digsInfo.name)}. ${esc(s.digsInfo.flavour)}</p>
              <p>${s.hasPass ? 'Your delegate badge swings proudly from your neck.' : 'You have no badge — the Palais is enemy territory. Everything else is fair game.'}
-             The Croisette glitters. Pipeline awaits. ${money(cash(s))} to play with.</p>`,
+             The Croisette glitters. Pipeline awaits. ${money(cash(s))} to play with.</p>
+             <p class="how-hint">Tap any place on the map to travel there or take actions. Watch the clock — and your energy.</p>`,
       options: [{ label: 'Let’s build some ROI' }],
     });
     addLog(s, `Touched down in Cannes. ${money(cash(s))} in the war chest, ${s.departureIdx - s.dayIdx} nights to make it count.`, 'day');
     render();
+    openSheet(s.location, { text: `You start on the Croisette. Tap an action below, or close this and pick a place on the map.`, cls: 'arrive' });
   })();
 }
