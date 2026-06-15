@@ -162,17 +162,30 @@ encounter is tied to venues where its text makes sense. Industry-twisted Dope Wa
 
 ## Tech
 
-- Single HTML page (vanilla or Preact), seeded PRNG (mulberry32 + date seed),
-  all content as data (JSON), stylized map as SVG/pixel art.
-- No backend.
-- Host: GitHub Pages.
+- Single HTML page, vanilla ES modules, all content as data (JSON). No build, no backend.
+- **Map:** illustrated image (`assets/map-board.webp`, 1280×853) as a CSS
+  background on a container locked to that aspect ratio; venue hotspots,
+  player beacon and sponsor badge are HTML elements positioned by percentage
+  `left`/`top` (`js/map.js`). NOT an SVG overlay — that drifted. Venue
+  coordinates were derived by auto-detecting the white label pills in the art.
+- **Type:** Fraunces (editorial serif) for spin values + headings, Space
+  Grotesk for body, Press Start 2P for the logo/retro accents.
+- Host: GitHub Pages behind Cloudflare (proxied). Live at croisetteorbust.com.
+- **Deploy:** push → wait for origin HTML to update → purge Cloudflare cache
+  (token in `~/.claude/cloudflare-purge.env`; CF caches CSS/JS 4h, HTML is
+  always fresh): `curl -s -X POST ".../zones/$CF_ZONE_ID/purge_cache" -H
+  "Authorization: Bearer $CF_PURGE_TOKEN" --data '{"purge_everything":true}'`
 
-## Decisions (locked 2026-06-12)
+## Decisions
 
 1. **Hosting:** GitHub Pages from Tim's personal account (`typedformiles`),
-   repo `croisetteorbust`. Later: free GitHub org `croisetteorbust` →
-   croisetteorbust.github.io. No paid domain unless it takes off.
-2. **Art:** pixel-art Riviera, pastel palette. Quality bar is HIGH — this is
-   for a marketing-industry audience; it must look crafted, not shabby.
+   repo `croisetteorbust`, custom domain **croisetteorbust.com** (Cloudflare
+   DNS + proxy). Possible later move to a `croisetteorbust` GitHub org.
+2. **Art:** illustrated Riviera map (a variant of the Adweek Cannes Atlas
+   style), replacing the original procedural pixel map (2026-06-13). Spin
+   screen uses "editorial glamour" styling — serif values, gold hairlines.
+   Quality bar is HIGH — marketing-industry audience.
 3. **Re-spin ("Appeal to Finance", −10% budget):** IN.
 4. **Mode:** random spins only, no daily seed.
+5. **Sponsor slot:** "YOUR BRAND HERE" badge in the top-right Vallauris hills
+   (static, no pulse); pitch modal shows tim@neuralift.ai with a copy button.

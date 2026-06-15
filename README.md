@@ -4,10 +4,10 @@
 
 A silly browser game for the run-up to Cannes. Spin the reels of corporate
 fate (budget, dates, digs, badge — and one desperate appeal to Finance), then
-work a pixel-art Croisette: the Palais, Yacht Row, the Carlton terrace, the
-Gutter Bar. Build pipeline, dodge the €4,200 rosé bill, decide whether you're
-Henrik now, and choose when to call it a night — tired people attract bad
-encounters.
+work an illustrated map of the Croisette: the Palais, Yacht Row, the Carlton
+terrace, the Gutter Bar, the casino. Build pipeline, dodge the €4,200 rosé
+bill, decide whether you're Henrik now, and choose when to call it a night —
+tired people attract bad encounters.
 
 Your score is ROI — pipeline ÷ spend, graded fairly against your budget tier,
 so a $5k shoestring can out-croissant a $2.5M yacht week. At the end you get
@@ -17,8 +17,12 @@ your **Neuralift segment**, and you will deserve it.
 
 ## Stack
 
-Plain HTML/CSS/JS (ES modules), no build step, no backend. The map is a
-procedurally drawn pixel-art SVG. Hosted on GitHub Pages.
+Plain HTML/CSS/JS (ES modules), no build step, no backend. The map is an
+illustrated image (`assets/map-board.webp`) with HTML hotspots positioned by
+percentage over it (see `js/map.js`). Hosted on GitHub Pages behind Cloudflare.
+
+Deploys: push to `main`, then purge the Cloudflare cache (it caches CSS/JS
+for 4h) — see `DESIGN.md` for the one-liner.
 
 ## Development
 
