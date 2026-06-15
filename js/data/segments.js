@@ -54,7 +54,7 @@ export const SEGMENTS = [
     key: 'machine', name: 'ROI MACHINE',
     match: (m) => m.perf >= 2 && m.joie < 40,
     desc: 'Ruthless. Efficient. Joyless. You treated the world’s most glamorous festival like a sales floor with better lighting — and the numbers agree with you.',
-    tip: 'Neuralift recommends: one (1) swim. As a treat.',
+    tip: 'Neuralift recommends: a swim. As a treat.',
   },
   {
     key: 'cfofav', name: 'THE CFO’S FAVOURITE',

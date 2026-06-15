@@ -82,7 +82,7 @@ export const ENCOUNTERS = [
     id: 'influencer', tone: 'mixed', weight: 8, once: true, when: [10, 22],
     where: ['carlton', 'cabanas', 'stroll', 'yachtrow'],
     title: 'Reach, Guaranteed*',
-    text: 'An influencer with 2.3M followers and sunglasses the size of satellite dishes offers to mention your brand in one (1) story. The price is €10,000. "My audience is basically all CMOs," she says. Her last post was a smoothie.',
+    text: 'An influencer with 2.3M followers and sunglasses the size of satellite dishes offers to mention your brand in one story. The price is €10,000. "My audience is basically all CMOs," she says. Her last post was a smoothie.',
     options: [
       {
         label: 'Pay the €10k', cost: 10_000,
